@@ -3,19 +3,19 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: wp, wpc, admin, columns, backend
 Tested up to: 6.8
-Version: 2.1.6
-Stable tag: 2.1.6
+Version: 2.1.7
+Stable tag: 2.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Playground: true
 
-WPC Admin Columns offers a listing of columns in the admin dashboards for different post types.
+WPC Admin Columns offers a listing of columns in the admin dashboards for different post-types.
 
 == Description ==
 
-Managing an online store on WordPress is made easier with the **WPC Admin Columns** plugin. This plugin offers a listing of columns in the admin dashboards for different post types so you can adjust the columns’ width, quickly find the ones to be edited, and easily preview the details in a glance.
+Managing an online store on WordPress is made easier with the **WPC Admin Columns** plugin. This plugin offers a listing of columns in the admin dashboards for different post-types, so you can adjust the columns’ width, quickly find the ones to be edited, and preview the details at a glance.
 
-A variety of data and parameters will be displayed for faster preview of different post types - products, posts, pages, and especially, orders. For example, instead of choosing a filter to find a specific product type, now users can see which type each product belongs to with the “Product type” column. It’s super helpful to detect special product types namely Smart Bundles/ Smart Composite & Smart Grouped.
+A variety of data and parameters will be displayed for faster preview of different post-types - products, posts, pages, and especially, orders. For example, instead of choosing a filter to find a specific product type, now users can see which type each product belongs to with the “Product type” column. It’s super helpful to detect special product types, namely Smart Bundles/ Smart Composite & Smart Grouped.
 
 The most remarkable feature in this plugin is the custom columns for products and orders. In the content of these custom columns, it’s possible to insert texts and shortcode. There’s also a Remove button for each custom column to be left out of the column list effortlessly. With this, shop owners and administrators can literally display any piece of information they want in the backend dashboard.
 
@@ -25,7 +25,7 @@ The most remarkable feature in this plugin is the custom columns for products an
 - Drag and drop to rearrange the columns
 - Customize the width of columns
 - Add unlimited new columns to the list
-- Support multiple post types: posts, products, pages, etc.
+- Support multiple post-types: posts, products, pages, etc.
 - Support multiple taxonomies: category, tag, collection, brand, product category, product attribute, etc.
 - Support comments, attachment, plugins
 - Plenty of predefined columns of data
@@ -39,24 +39,24 @@ The most remarkable feature in this plugin is the custom columns for products an
 
 = Default Columns =
 
-WordPress allows users to check/uncheck the columns they want to display or hide from the Screen Options menu. However, it’s time consuming when you need to modify more data at the same time and very annoying to open that menu several times.
+WordPress allows users to check/uncheck the columns they want to display or hide from the Screen Options menu. However, it’s time-consuming when you need to modify more data at the same time and very annoying to open that menu several times.
 
 WPC Admin Columns helps you go further by listing all columns in one popup so they can grab the information in an instance. Default columns will be listed on top of each list:
 
 - Products: Image, Name, SKU, Stock, Price, Categories, Tags, Featured, Date
-- Orders: Order, Date, Status, Billing, Ship To, Total, Actions, Latest Note, Note
+- Orders: Order, Date, Status, Billing, Ship To, Total, Actions, the Latest Note, Note
 - Pages: Title, Author, Comments, Date
 - Posts: Title, Author, Categories, Tags, Comments, Date
 
 = Management of Products & Orders =
 
-By default, WooCommerce only shows some of the product details in the Products dashboard. Our plugin makes it more straightforward for shop owners and administrators to preview products’ type, status, description, short description, weight, length, width, height, dimensions besides basic information namely product ID & name.
+By default, WooCommerce only shows some of the product details in the Products dashboard. Our plugin makes it more straightforward for shop owners and administrators to preview products’ type, status, description, short description, weight, length, width, height, dimensions besides basic information, namely product ID & name.
 
-For orders, users are entitled to not just preview basic information such as Order, Date, Status, Billing, Ship To, Total, Actions, Latest Note, Note. There is an individual column exclusive for notes created by the WPC Order Notes for WooCommerce plugin. Clicking on the icon under the Notes column then the popup will be opened for users to preview all existing notes & add a new one if they want.
+For orders, users are entitled to not just preview basic information such as Order, Date, Status, Billing, Ship To, Total, Actions, Latest Note, Note. There is an individual column exclusive for notes created by the WPC Order Notes for WooCommerce plugin. Clicking on the icon under the Notes column, then the popup will be opened for users to preview all existing notes and add a new one if they want.
 
 = Work in the WPClever Ecosystem =
 
-Being a new member in the plugin collection of WPClever means there are huge possibilities that many features of other WPC plugins are integrated and ready to use for users. It also means this plugin is fully tested on any of our WPC themes so users can expect smooth performance if they use any of our themes for the online store.
+Being a new member in the plugin collection of WPClever means there are huge possibilities that many features of other WPC plugins are integrated and ready to use for users. It also means this plugin is fully tested on any of our WPC themes, so users can expect smooth performance if they use any of our themes for the online store.
 
 For products, there are ready-made columns for:
 
@@ -80,10 +80,14 @@ Please try other plugins from us:
 == Installation ==
 
 1. Go to plugins in your dashboard and select "Add New"
-2. Search for "WPC Admin Columns", Install & Activate it
+2. Search for "WPC Admin Columns," Install & Activate it
 3. All done!
 
 == Changelog ==
+
+= 2.1.7 =
+* Updated: Optimized the code
+* Updated: Compatible with WP 6.8 & Woo 10.2
 
 = 2.1.6 =
 * Fixed: Minor CSS/JS issues in the backend
@@ -96,7 +100,7 @@ Please try other plugins from us:
 * Fixed: Minor CSS/JS issues in the backend
 
 = 2.1.3 =
-* Fixed: Prevent wp_kses_allowed_html on frontend
+* Fixed: Prevent wp_kses_allowed_html on the frontend
 
 = 2.1.2 =
 * Added: Customer name, Customer email, Billing phone
@@ -139,7 +143,7 @@ Please try other plugins from us:
 
 = 2.0.0 =
 * Updated: Support managing columns for any taxonomy
-* Updated: Support managing columns for Plugins page
+* Updated: Support managing columns for the Plugins page
 
 = 1.5.0 =
 * Added: Built-in duplicate feature
