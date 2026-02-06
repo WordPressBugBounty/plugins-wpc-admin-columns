@@ -2,22 +2,22 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPC Admin Columns 2.1.7\n"
+"Project-Id-Version: WPC Admin Columns 2.1.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpc-admin-columns\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-02T03:03:48+00:00\n"
+"POT-Creation-Date: 2025-12-12T03:52:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpc-admin-columns\n"
 
 #. Plugin Name of the plugin
 #: wpc-admin-columns.php
-#: includes/class-backend.php:2575
-#: includes/class-backend.php:2589
+#: includes/class-backend.php:2578
+#: includes/class-backend.php:2592
 msgid "WPC Admin Columns"
 msgstr ""
 
@@ -92,6 +92,7 @@ msgstr ""
 
 #. translators: screen
 #: includes/class-backend.php:271
+#, php-format
 msgid "Columns Manager › %s"
 msgstr ""
 
@@ -216,8 +217,8 @@ msgstr ""
 #: includes/class-backend.php:837
 #: includes/class-backend.php:984
 #: includes/class-backend.php:1177
-#: includes/class-backend.php:2642
-#: includes/class-backend.php:2652
+#: includes/class-backend.php:2645
+#: includes/class-backend.php:2655
 msgid "No"
 msgstr ""
 
@@ -226,8 +227,8 @@ msgstr ""
 #: includes/class-backend.php:836
 #: includes/class-backend.php:983
 #: includes/class-backend.php:1176
-#: includes/class-backend.php:2641
-#: includes/class-backend.php:2651
+#: includes/class-backend.php:2644
+#: includes/class-backend.php:2654
 msgid "Yes"
 msgstr ""
 
@@ -514,7 +515,7 @@ msgid "Last modified"
 msgstr ""
 
 #: includes/class-backend.php:653
-#: includes/class-backend.php:2634
+#: includes/class-backend.php:2637
 msgid "General"
 msgstr ""
 
@@ -590,6 +591,7 @@ msgstr ""
 #: includes/class-backend.php:776
 #: includes/class-backend.php:923
 #: includes/class-backend.php:1116
+#, php-format
 msgid "You are editing the field \"%1$s\" of \"%2$s\"."
 msgstr ""
 
@@ -637,6 +639,7 @@ msgstr ""
 
 #. translators: taxonomy
 #: includes/class-backend.php:1057
+#, php-format
 msgid "You are editing the taxonomy \"%1$s\" of \"%2$s\"."
 msgstr ""
 
@@ -659,6 +662,7 @@ msgstr ""
 #: includes/class-backend.php:2137
 #: includes/class-backend.php:2380
 #: includes/class-backend.php:2491
+#, php-format
 msgid "Edit \"%1$s\" of #%2$s"
 msgstr ""
 
@@ -672,6 +676,7 @@ msgstr ""
 
 #. translators: count
 #: includes/class-backend.php:1952
+#, php-format
 msgid "%s variation"
 msgid_plural "%s variations"
 msgstr[0] ""
@@ -679,6 +684,7 @@ msgstr[1] ""
 
 #. translators: product id
 #: includes/class-backend.php:1953
+#, php-format
 msgid "Variations of #%s"
 msgstr ""
 
@@ -688,6 +694,7 @@ msgstr ""
 
 #. translators: post title
 #: includes/class-backend.php:1979
+#, php-format
 msgid "Restore &#8220;%s&#8221; from the Trash"
 msgstr ""
 
@@ -697,6 +704,7 @@ msgstr ""
 
 #. translators: post title
 #: includes/class-backend.php:1987
+#, php-format
 msgid "Move &#8220;%s&#8221; to the Trash"
 msgstr ""
 
@@ -707,6 +715,7 @@ msgstr ""
 
 #. translators: post title
 #: includes/class-backend.php:1997
+#, php-format
 msgid "Delete &#8220;%s&#8221; permanently"
 msgstr ""
 
@@ -716,6 +725,7 @@ msgstr ""
 
 #. translators: post title
 #: includes/class-backend.php:2011
+#, php-format
 msgid "Preview &#8220;%s&#8221;"
 msgstr ""
 
@@ -725,6 +735,7 @@ msgstr ""
 
 #. translators: post title
 #: includes/class-backend.php:2020
+#, php-format
 msgid "View &#8220;%s&#8221;"
 msgstr ""
 
@@ -734,6 +745,7 @@ msgstr ""
 
 #. translators: post id
 #: includes/class-backend.php:2033
+#, php-format
 msgid "Duplicate #%d"
 msgstr ""
 
@@ -743,74 +755,75 @@ msgstr ""
 msgid "copy"
 msgstr ""
 
-#: includes/class-backend.php:2575
+#: includes/class-backend.php:2578
 msgid "Admin Columns"
 msgstr ""
 
-#: includes/class-backend.php:2589
+#: includes/class-backend.php:2592
 msgid "Premium"
 msgstr ""
 
 #. translators: stars
-#: includes/class-backend.php:2592
+#: includes/class-backend.php:2595
+#, php-format
 msgid "Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating."
 msgstr ""
 
-#: includes/class-backend.php:2595
+#: includes/class-backend.php:2598
 msgid "Reviews"
 msgstr ""
 
-#: includes/class-backend.php:2597
+#: includes/class-backend.php:2600
 msgid "Changelog"
 msgstr ""
 
-#: includes/class-backend.php:2599
+#: includes/class-backend.php:2602
 msgid "Discussion"
 msgstr ""
 
-#: includes/class-backend.php:2607
+#: includes/class-backend.php:2610
 msgid "Settings updated."
 msgstr ""
 
-#: includes/class-backend.php:2614
-#: includes/class-backend.php:2710
+#: includes/class-backend.php:2617
+#: includes/class-backend.php:2713
 msgid "Settings"
 msgstr ""
 
-#: includes/class-backend.php:2619
-#: includes/class-backend.php:2711
+#: includes/class-backend.php:2622
+#: includes/class-backend.php:2714
 msgid "Premium Version"
 msgstr ""
 
-#: includes/class-backend.php:2621
+#: includes/class-backend.php:2624
 msgid "Essential Kit"
 msgstr ""
 
-#: includes/class-backend.php:2638
+#: includes/class-backend.php:2641
 msgid "Personalized"
 msgstr ""
 
-#: includes/class-backend.php:2644
+#: includes/class-backend.php:2647
 msgid "Enable it to let each manager has their own columns organization. Their changes will not affect another."
 msgstr ""
 
-#: includes/class-backend.php:2648
+#: includes/class-backend.php:2651
 msgid "Enable JSON Editor"
 msgstr ""
 
-#: includes/class-backend.php:2654
+#: includes/class-backend.php:2657
 msgid "Enable JSON Editor to editing custom field in JSON format. It uses the library https://github.com/dblate/jquery.json-editor"
 msgstr ""
 
-#: includes/class-backend.php:2727
+#: includes/class-backend.php:2730
 msgid "Community support"
 msgstr ""
 
-#: includes/class-backend.php:2798
+#: includes/class-backend.php:2789
 msgid "No post to duplicate!"
 msgstr ""
 
-#: includes/class-backend.php:2833
+#: includes/class-backend.php:2824
 msgid "Copy creation failed, could not find original:"
 msgstr ""
 
@@ -820,10 +833,12 @@ msgstr ""
 
 #. translators: order id
 #: includes/class-duplicate.php:239
+#, php-format
 msgid "Cloned Order from #%d"
 msgstr ""
 
 #. translators: order id
 #: includes/class-duplicate.php:240
+#, php-format
 msgid "Order cloned to #%d"
 msgstr ""

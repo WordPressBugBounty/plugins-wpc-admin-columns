@@ -2,9 +2,9 @@
 Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: wp, wpc, admin, columns, backend
-Tested up to: 6.8
-Version: 2.1.7
-Stable tag: 2.1.7
+Tested up to: 6.9
+Version: 2.1.9
+Stable tag: 2.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Playground: true
@@ -84,6 +84,13 @@ Please try other plugins from us:
 3. All done!
 
 == Changelog ==
+
+= 2.1.9 =
+* Updated: Optimized the code
+* Updated: Compatible with WP 6.9 & Woo 10.3
+
+= 2.1.8 =
+* Fixed: Minor CSS/JS issues in the backend
 
 = 2.1.7 =
 * Updated: Optimized the code

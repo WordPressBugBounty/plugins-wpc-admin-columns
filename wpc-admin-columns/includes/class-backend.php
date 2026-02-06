@@ -765,7 +765,7 @@ class Wpcac_Backend {
                     $value = is_array( $field_value ) ? $field_value : [];
                 } else {
                     if ( is_array( $field_value ) || is_object( $field_value ) ) {
-                        $value = json_encode( $field_value );
+                        $value = json_encode( $field_value, JSON_PRETTY_PRINT );
                     } elseif ( is_string( $field_value ) ) {
                         $value = $field_value;
                     } else {
@@ -912,7 +912,7 @@ class Wpcac_Backend {
                     $value = is_array( $field_value ) ? $field_value : [];
                 } else {
                     if ( is_array( $field_value ) || is_object( $field_value ) ) {
-                        $value = json_encode( $field_value );
+                        $value = json_encode( $field_value, JSON_PRETTY_PRINT );
                     } elseif ( is_string( $field_value ) ) {
                         $value = $field_value;
                     } else {
@@ -1105,7 +1105,7 @@ class Wpcac_Backend {
                         $value = is_array( $field_value ) ? $field_value : [];
                     } else {
                         if ( is_array( $field_value ) || is_object( $field_value ) ) {
-                            $value = json_encode( $field_value );
+                            $value = json_encode( $field_value, JSON_PRETTY_PRINT );
                         } elseif ( is_string( $field_value ) ) {
                             $value = $field_value;
                         } else {
@@ -2568,7 +2568,10 @@ class Wpcac_Backend {
 
     function register_settings() {
         // settings
-        register_setting( 'wpcac_settings', 'wpcac_settings' );
+        register_setting( 'wpcac_settings', 'wpcac_settings', [
+                'type'              => 'array',
+                'sanitize_callback' => [ $this, 'sanitize_array' ],
+        ] );
     }
 
     function admin_menu() {
@@ -2733,18 +2736,6 @@ class Wpcac_Backend {
         return (array) $links;
     }
 
-    function sanitize_array( $arr ) {
-        foreach ( (array) $arr as $k => $v ) {
-            if ( is_array( $v ) ) {
-                $arr[ $k ] = self::sanitize_array( $v );
-            } else {
-                $arr[ $k ] = sanitize_text_field( $v );
-            }
-        }
-
-        return $arr;
-    }
-
     function get_meta_keys( $screen_key = 'product' ) {
         global $wpdb;
         $transient_key = 'wpcac_get_' . $screen_key . '_meta_keys_' . WPCAC_VERSION;
@@ -2862,7 +2853,19 @@ class Wpcac_Backend {
         return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
     }
 
-    function generate_key() {
+    public static function sanitize_array( $arr ) {
+        foreach ( (array) $arr as $k => $v ) {
+            if ( is_array( $v ) ) {
+                $arr[ $k ] = self::sanitize_array( $v );
+            } else {
+                $arr[ $k ] = sanitize_post_field( 'post_content', $v, 0, 'db' );
+            }
+        }
+
+        return $arr;
+    }
+
+    public static function generate_key() {
         $key         = '';
         $key_str     = apply_filters( 'wpcac_key_characters', 'abcdefghijklmnopqrstuvwxyz0123456789' );
         $key_str_len = strlen( $key_str );

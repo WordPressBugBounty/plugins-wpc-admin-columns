@@ -3,13 +3,13 @@
 Plugin Name: WPC Admin Columns
 Plugin URI: https://wpclever.net/
 Description: Manage and organize columns in the products, orders, and any post-types lists in the admin panel.
-Version: 2.1.7
+Version: 2.1.9
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-admin-columns
 Domain Path: /languages/
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 Playground: true
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,12 +17,12 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.1.7' );
+! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.1.9' );
 ! defined( 'WPCAC_LITE' ) && define( 'WPCAC_LITE', __FILE__ );
 ! defined( 'WPCAC_FILE' ) && define( 'WPCAC_FILE', __FILE__ );
 ! defined( 'WPCAC_URI' ) && define( 'WPCAC_URI', plugin_dir_url( __FILE__ ) );
 ! defined( 'WPCAC_DIR' ) && define( 'WPCAC_DIR', plugin_dir_path( __FILE__ ) );
-! defined( 'WPCAC_REVIEWS' ) && define( 'WPCAC_REVIEWS', 'https://wordpress.org/support/plugin/wpc-admin-columns/reviews/?filter=5' );
+! defined( 'WPCAC_REVIEWS' ) && define( 'WPCAC_REVIEWS', 'https://wordpress.org/support/plugin/wpc-admin-columns/reviews/' );
 ! defined( 'WPCAC_SUPPORT' ) && define( 'WPCAC_SUPPORT', 'https://wpclever.net/support?utm_source=support&utm_medium=wpcac&utm_campaign=wporg' );
 ! defined( 'WPCAC_CHANGELOG' ) && define( 'WPCAC_CHANGELOG', 'https://wordpress.org/plugins/wpc-admin-columns/#developers' );
 ! defined( 'WPCAC_DISCUSSION' ) && define( 'WPCAC_DISCUSSION', 'https://wordpress.org/support/plugin/wpc-admin-columns' );

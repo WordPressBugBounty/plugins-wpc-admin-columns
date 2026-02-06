@@ -900,6 +900,16 @@ body.wpcac-horizontal-scroll .wpcac-horizontal-scroll-table table.wp-list-table.
   padding: 0;
 }
 
+.ui-dialog.wpc-dialog + .ui-widget-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
 .ui-dialog.wpc-dialog .ui-dialog-titlebar {
   background: #fcfcfc;
   border-width: 0 0 1px 0;
@@ -970,16 +980,6 @@ body.wpcac-horizontal-scroll .wpcac-horizontal-scroll-table table.wp-list-table.
 .ui-dialog.wpc-dialog .ui-dialog-content {
   padding: 16px;
   overflow: auto;
-}
-
-.ui-widget-overlay.wpc-dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: none;
-  background-color: rgba(0, 0, 0, .08);
 }
 
 input[type="search"] {
