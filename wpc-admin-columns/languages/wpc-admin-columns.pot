@@ -1,23 +1,23 @@
-# Copyright (C) 2025 WPClever
+# Copyright (C) 2026 WPClever
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPC Admin Columns 2.1.9\n"
+"Project-Id-Version: WPC Admin Columns 2.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpc-admin-columns\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-12T03:52:38+00:00\n"
+"POT-Creation-Date: 2026-03-14T15:37:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpc-admin-columns\n"
 
 #. Plugin Name of the plugin
 #: wpc-admin-columns.php
-#: includes/class-backend.php:2578
-#: includes/class-backend.php:2592
+#: includes/class-backend.php:2588
+#: includes/class-backend.php:2602
 msgid "WPC Admin Columns"
 msgstr ""
 
@@ -41,641 +41,641 @@ msgstr ""
 msgid "https://wpclever.net"
 msgstr ""
 
-#: includes/class-backend.php:164
+#: includes/class-backend.php:165
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/class-backend.php:165
+#: includes/class-backend.php:166
 msgid "All column organization on this page will be removed. Are you sure?"
 msgstr ""
 
-#: includes/class-backend.php:166
-#: includes/class-backend.php:2136
-#: includes/class-backend.php:2379
-#: includes/class-backend.php:2490
+#: includes/class-backend.php:167
+#: includes/class-backend.php:2137
+#: includes/class-backend.php:2380
+#: includes/class-backend.php:2491
 msgid "Copy"
 msgstr ""
 
-#: includes/class-backend.php:167
+#: includes/class-backend.php:168
 msgid "Copied"
 msgstr ""
 
-#: includes/class-backend.php:168
-#: includes/class-backend.php:341
+#: includes/class-backend.php:169
+#: includes/class-backend.php:342
 msgid "Enabled"
 msgstr ""
 
-#: includes/class-backend.php:169
-#: includes/class-backend.php:341
+#: includes/class-backend.php:170
+#: includes/class-backend.php:342
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-backend.php:171
+#: includes/class-backend.php:172
 msgid "Add Image"
 msgstr ""
 
-#: includes/class-backend.php:172
+#: includes/class-backend.php:173
 msgid "Custom Image"
 msgstr ""
 
-#: includes/class-backend.php:173
+#: includes/class-backend.php:174
 msgid "Got it!"
 msgstr ""
 
-#: includes/class-backend.php:174
+#: includes/class-backend.php:175
 msgid "Click here to take control of columns. Add, remove, or rearrange them as you wish."
 msgstr ""
 
-#: includes/class-backend.php:267
+#: includes/class-backend.php:268
 msgid "Columns"
 msgstr ""
 
 #. translators: screen
-#: includes/class-backend.php:271
+#: includes/class-backend.php:272
 #, php-format
 msgid "Columns Manager › %s"
 msgstr ""
 
-#: includes/class-backend.php:292
+#: includes/class-backend.php:293
 msgid "+ Add column"
 msgstr ""
 
-#: includes/class-backend.php:293
+#: includes/class-backend.php:294
 msgid "reset"
 msgstr ""
 
-#: includes/class-backend.php:295
+#: includes/class-backend.php:296
 msgid "Save Changes"
 msgstr ""
 
-#: includes/class-backend.php:349
-#: includes/class-backend.php:621
+#: includes/class-backend.php:350
+#: includes/class-backend.php:622
 msgid "Name"
 msgstr ""
 
-#: includes/class-backend.php:356
-#: includes/class-backend.php:633
+#: includes/class-backend.php:357
+#: includes/class-backend.php:634
 msgid "Type"
 msgstr ""
 
-#: includes/class-backend.php:395
+#: includes/class-backend.php:396
 msgid "Content"
 msgstr ""
 
-#: includes/class-backend.php:402
+#: includes/class-backend.php:403
 msgid "Field"
 msgstr ""
 
-#: includes/class-backend.php:414
+#: includes/class-backend.php:415
 msgid "Have no fields."
 msgstr ""
 
-#: includes/class-backend.php:420
+#: includes/class-backend.php:421
 msgid "Data type"
 msgstr ""
 
-#: includes/class-backend.php:424
+#: includes/class-backend.php:425
 msgid "Text"
 msgstr ""
 
-#: includes/class-backend.php:425
+#: includes/class-backend.php:426
 msgid "Number"
 msgstr ""
 
-#: includes/class-backend.php:426
+#: includes/class-backend.php:427
 msgid "Email"
 msgstr ""
 
-#: includes/class-backend.php:427
+#: includes/class-backend.php:428
 msgid "URL"
 msgstr ""
 
-#: includes/class-backend.php:428
+#: includes/class-backend.php:429
 msgid "Color"
 msgstr ""
 
-#: includes/class-backend.php:429
+#: includes/class-backend.php:430
 msgid "Image"
 msgstr ""
 
-#: includes/class-backend.php:430
+#: includes/class-backend.php:431
 msgid "Multiple Images"
 msgstr ""
 
-#: includes/class-backend.php:431
+#: includes/class-backend.php:432
 msgid "True/False"
 msgstr ""
 
-#: includes/class-backend.php:432
+#: includes/class-backend.php:433
 msgid "Yes/No"
 msgstr ""
 
-#: includes/class-backend.php:433
+#: includes/class-backend.php:434
 msgid "On/Off"
 msgstr ""
 
-#: includes/class-backend.php:434
+#: includes/class-backend.php:435
 msgid "Select"
 msgstr ""
 
-#: includes/class-backend.php:435
+#: includes/class-backend.php:436
 msgid "Multiple Select"
 msgstr ""
 
-#: includes/class-backend.php:436
+#: includes/class-backend.php:437
 msgid "Textarea"
 msgstr ""
 
-#: includes/class-backend.php:437
+#: includes/class-backend.php:438
 msgid "Universal"
 msgstr ""
 
-#: includes/class-backend.php:439
+#: includes/class-backend.php:440
 msgid "JSON (JavaScript Object Notation)"
 msgstr ""
 
-#: includes/class-backend.php:445
+#: includes/class-backend.php:446
 msgid "Choices"
 msgstr ""
 
-#: includes/class-backend.php:447
+#: includes/class-backend.php:448
 msgid "Enter each choice on a new line. For more control, you may specify both a value and label like this: red : Red"
 msgstr ""
 
-#: includes/class-backend.php:453
-#: includes/class-backend.php:670
-#: includes/class-backend.php:676
+#: includes/class-backend.php:454
+#: includes/class-backend.php:671
+#: includes/class-backend.php:677
 msgid "Taxonomy"
 msgstr ""
 
-#: includes/class-backend.php:476
+#: includes/class-backend.php:477
 msgid "Editable"
-msgstr ""
-
-#: includes/class-backend.php:479
-#: includes/class-backend.php:497
-#: includes/class-backend.php:837
-#: includes/class-backend.php:984
-#: includes/class-backend.php:1177
-#: includes/class-backend.php:2645
-#: includes/class-backend.php:2655
-msgid "No"
 msgstr ""
 
 #: includes/class-backend.php:480
 #: includes/class-backend.php:498
-#: includes/class-backend.php:836
-#: includes/class-backend.php:983
-#: includes/class-backend.php:1176
-#: includes/class-backend.php:2644
+#: includes/class-backend.php:838
+#: includes/class-backend.php:985
+#: includes/class-backend.php:1178
+#: includes/class-backend.php:2655
+#: includes/class-backend.php:2665
+msgid "No"
+msgstr ""
+
+#: includes/class-backend.php:481
+#: includes/class-backend.php:499
+#: includes/class-backend.php:837
+#: includes/class-backend.php:984
+#: includes/class-backend.php:1177
 #: includes/class-backend.php:2654
+#: includes/class-backend.php:2664
 msgid "Yes"
 msgstr ""
 
-#: includes/class-backend.php:494
+#: includes/class-backend.php:495
 msgid "Sortable"
 msgstr ""
 
-#: includes/class-backend.php:509
+#: includes/class-backend.php:510
 msgid "Width"
 msgstr ""
 
-#: includes/class-backend.php:521
+#: includes/class-backend.php:522
 msgid "Text align"
 msgstr ""
 
-#: includes/class-backend.php:524
+#: includes/class-backend.php:525
 msgid "start"
 msgstr ""
 
-#: includes/class-backend.php:525
+#: includes/class-backend.php:526
 msgid "center"
 msgstr ""
 
-#: includes/class-backend.php:526
+#: includes/class-backend.php:527
 msgid "end"
 msgstr ""
 
-#: includes/class-backend.php:531
+#: includes/class-backend.php:532
 msgid "Text color"
 msgstr ""
 
-#: includes/class-backend.php:542
+#: includes/class-backend.php:543
 msgid "remove"
 msgstr ""
 
-#: includes/class-backend.php:555
+#: includes/class-backend.php:556
 msgid "Product"
 msgstr ""
 
-#: includes/class-backend.php:559
+#: includes/class-backend.php:560
 msgid "Product ID"
 msgstr ""
 
-#: includes/class-backend.php:560
+#: includes/class-backend.php:561
 msgid "Product SKU"
 msgstr ""
 
-#: includes/class-backend.php:561
+#: includes/class-backend.php:562
 msgid "Product type"
 msgstr ""
 
-#: includes/class-backend.php:562
+#: includes/class-backend.php:563
 msgid "Product type icon"
 msgstr ""
 
-#: includes/class-backend.php:563
+#: includes/class-backend.php:564
 msgid "Product featured image"
 msgstr ""
 
-#: includes/class-backend.php:564
+#: includes/class-backend.php:565
 msgid "Product gallery images"
 msgstr ""
 
-#: includes/class-backend.php:565
+#: includes/class-backend.php:566
 msgid "Product name"
 msgstr ""
 
-#: includes/class-backend.php:566
+#: includes/class-backend.php:567
 msgid "Product slug"
 msgstr ""
 
-#: includes/class-backend.php:567
+#: includes/class-backend.php:568
 msgid "Product status"
 msgstr ""
 
-#: includes/class-backend.php:568
+#: includes/class-backend.php:569
 msgid "Product description"
 msgstr ""
 
-#: includes/class-backend.php:569
+#: includes/class-backend.php:570
 msgid "Product short description"
 msgstr ""
 
-#: includes/class-backend.php:570
+#: includes/class-backend.php:571
 msgid "Product weight"
 msgstr ""
 
-#: includes/class-backend.php:571
+#: includes/class-backend.php:572
 msgid "Product length"
 msgstr ""
 
-#: includes/class-backend.php:572
+#: includes/class-backend.php:573
 msgid "Product width"
 msgstr ""
 
-#: includes/class-backend.php:573
+#: includes/class-backend.php:574
 msgid "Product height"
 msgstr ""
 
-#: includes/class-backend.php:574
+#: includes/class-backend.php:575
 msgid "Product dimensions"
 msgstr ""
 
-#: includes/class-backend.php:575
+#: includes/class-backend.php:576
 msgid "Product taxonomy"
 msgstr ""
 
-#: includes/class-backend.php:576
+#: includes/class-backend.php:577
 msgid "Product variations"
 msgstr ""
 
-#: includes/class-backend.php:577
+#: includes/class-backend.php:578
 msgid "Product actions"
 msgstr ""
 
-#: includes/class-backend.php:578
+#: includes/class-backend.php:579
 msgid "Product meta"
 msgstr ""
 
-#: includes/class-backend.php:579
-#: includes/class-backend.php:594
-#: includes/class-backend.php:672
+#: includes/class-backend.php:580
+#: includes/class-backend.php:595
+#: includes/class-backend.php:673
 msgid "Duplicate"
 msgstr ""
 
-#: includes/class-backend.php:583
+#: includes/class-backend.php:584
 msgid "Order"
 msgstr ""
 
-#: includes/class-backend.php:587
+#: includes/class-backend.php:588
 msgid "Order ID"
 msgstr ""
 
-#: includes/class-backend.php:588
+#: includes/class-backend.php:589
 msgid "Order products"
 msgstr ""
 
-#: includes/class-backend.php:589
+#: includes/class-backend.php:590
 msgid "Customer name"
 msgstr ""
 
-#: includes/class-backend.php:590
+#: includes/class-backend.php:591
 msgid "Customer email"
 msgstr ""
 
-#: includes/class-backend.php:591
+#: includes/class-backend.php:592
 msgid "Billing phone"
 msgstr ""
 
-#: includes/class-backend.php:592
+#: includes/class-backend.php:593
 msgid "Billing email"
 msgstr ""
 
-#: includes/class-backend.php:593
+#: includes/class-backend.php:594
 msgid "Shipping phone"
 msgstr ""
 
-#: includes/class-backend.php:598
+#: includes/class-backend.php:599
 msgid "User"
 msgstr ""
 
-#: includes/class-backend.php:601
+#: includes/class-backend.php:602
 msgid "User ID"
 msgstr ""
 
-#: includes/class-backend.php:602
+#: includes/class-backend.php:603
 msgid "User email"
 msgstr ""
 
-#: includes/class-backend.php:603
+#: includes/class-backend.php:604
 msgid "User login name"
 msgstr ""
 
-#: includes/class-backend.php:604
+#: includes/class-backend.php:605
 msgid "User first name"
 msgstr ""
 
-#: includes/class-backend.php:605
+#: includes/class-backend.php:606
 msgid "User last name"
 msgstr ""
 
-#: includes/class-backend.php:606
+#: includes/class-backend.php:607
 msgid "User nice name"
 msgstr ""
 
-#: includes/class-backend.php:607
+#: includes/class-backend.php:608
 msgid "User nickname"
 msgstr ""
 
-#: includes/class-backend.php:608
+#: includes/class-backend.php:609
 msgid "User display name"
 msgstr ""
 
-#: includes/class-backend.php:609
+#: includes/class-backend.php:610
 msgid "User registration date"
 msgstr ""
 
-#: includes/class-backend.php:610
+#: includes/class-backend.php:611
 msgid "User description"
 msgstr ""
 
-#: includes/class-backend.php:611
+#: includes/class-backend.php:612
 msgid "User URL"
 msgstr ""
 
-#: includes/class-backend.php:612
+#: includes/class-backend.php:613
 msgid "User level"
 msgstr ""
 
-#: includes/class-backend.php:613
+#: includes/class-backend.php:614
 msgid "User status"
 msgstr ""
 
-#: includes/class-backend.php:614
+#: includes/class-backend.php:615
 msgid "User meta"
 msgstr ""
 
-#: includes/class-backend.php:618
+#: includes/class-backend.php:619
 msgid "Plugin"
 msgstr ""
 
-#: includes/class-backend.php:622
-#: includes/class-backend.php:635
-#: includes/class-backend.php:647
-#: includes/class-backend.php:663
+#: includes/class-backend.php:623
+#: includes/class-backend.php:636
+#: includes/class-backend.php:648
+#: includes/class-backend.php:664
 msgid "Author"
 msgstr ""
 
-#: includes/class-backend.php:623
+#: includes/class-backend.php:624
 msgid "Version"
 msgstr ""
 
-#: includes/class-backend.php:624
+#: includes/class-backend.php:625
 msgid "Icon"
 msgstr ""
 
-#: includes/class-backend.php:625
+#: includes/class-backend.php:626
 msgid "Description"
 msgstr ""
 
-#: includes/class-backend.php:629
+#: includes/class-backend.php:630
 msgid "Comment"
 msgstr ""
 
-#: includes/class-backend.php:632
-#: includes/class-backend.php:646
-#: includes/class-backend.php:657
+#: includes/class-backend.php:633
+#: includes/class-backend.php:647
+#: includes/class-backend.php:658
 msgid "ID"
 msgstr ""
 
-#: includes/class-backend.php:634
+#: includes/class-backend.php:635
 msgid "Date"
 msgstr ""
 
-#: includes/class-backend.php:636
+#: includes/class-backend.php:637
 msgid "Author email"
 msgstr ""
 
-#: includes/class-backend.php:637
+#: includes/class-backend.php:638
 msgid "Author URL"
 msgstr ""
 
-#: includes/class-backend.php:638
-#: includes/class-backend.php:662
+#: includes/class-backend.php:639
+#: includes/class-backend.php:663
 msgid "Words count"
 msgstr ""
 
-#: includes/class-backend.php:639
+#: includes/class-backend.php:640
 msgid "Post"
 msgstr ""
 
-#: includes/class-backend.php:643
+#: includes/class-backend.php:644
 msgid "Attachment"
-msgstr ""
-
-#: includes/class-backend.php:648
-#: includes/class-backend.php:664
-msgid "Published"
 msgstr ""
 
 #: includes/class-backend.php:649
 #: includes/class-backend.php:665
+msgid "Published"
+msgstr ""
+
+#: includes/class-backend.php:650
+#: includes/class-backend.php:666
 msgid "Last modified"
 msgstr ""
 
-#: includes/class-backend.php:653
-#: includes/class-backend.php:2637
+#: includes/class-backend.php:654
+#: includes/class-backend.php:2647
 msgid "General"
 msgstr ""
 
-#: includes/class-backend.php:658
+#: includes/class-backend.php:659
 msgid "Slug"
 msgstr ""
 
-#: includes/class-backend.php:659
+#: includes/class-backend.php:660
 msgid "Title"
 msgstr ""
 
-#: includes/class-backend.php:660
+#: includes/class-backend.php:661
 msgid "Status"
 msgstr ""
 
-#: includes/class-backend.php:661
+#: includes/class-backend.php:662
 msgid "Excerpt"
 msgstr ""
 
-#: includes/class-backend.php:666
+#: includes/class-backend.php:667
 msgid "Featured image"
 msgstr ""
 
-#: includes/class-backend.php:667
+#: includes/class-backend.php:668
 msgid "Comment status"
 msgstr ""
 
-#: includes/class-backend.php:668
+#: includes/class-backend.php:669
 msgid "Comment count"
 msgstr ""
 
-#: includes/class-backend.php:669
+#: includes/class-backend.php:670
 msgid "Ping status"
 msgstr ""
 
-#: includes/class-backend.php:671
+#: includes/class-backend.php:672
 msgid "Actions"
 msgstr ""
 
-#: includes/class-backend.php:679
+#: includes/class-backend.php:680
 msgid "Term ID"
 msgstr ""
 
-#: includes/class-backend.php:680
+#: includes/class-backend.php:681
 msgid "Term name"
 msgstr ""
 
-#: includes/class-backend.php:681
+#: includes/class-backend.php:682
 msgid "Term slug"
 msgstr ""
 
-#: includes/class-backend.php:682
+#: includes/class-backend.php:683
 msgid "Term description"
 msgstr ""
 
-#: includes/class-backend.php:683
+#: includes/class-backend.php:684
 msgid "Term meta"
 msgstr ""
 
-#: includes/class-backend.php:687
+#: includes/class-backend.php:688
 msgid "Custom"
 msgstr ""
 
-#: includes/class-backend.php:690
+#: includes/class-backend.php:691
 msgid "Custom field"
 msgstr ""
 
-#: includes/class-backend.php:691
+#: includes/class-backend.php:692
 msgid "Custom text/shortcode"
 msgstr ""
 
 #. translators: field
-#: includes/class-backend.php:776
-#: includes/class-backend.php:923
-#: includes/class-backend.php:1116
+#: includes/class-backend.php:777
+#: includes/class-backend.php:924
+#: includes/class-backend.php:1117
 #, php-format
 msgid "You are editing the field \"%1$s\" of \"%2$s\"."
-msgstr ""
-
-#: includes/class-backend.php:804
-#: includes/class-backend.php:951
-#: includes/class-backend.php:1144
-msgid "Remove"
 msgstr ""
 
 #: includes/class-backend.php:805
 #: includes/class-backend.php:952
 #: includes/class-backend.php:1145
-msgid "Choose Image"
+msgid "Remove"
 msgstr ""
 
-#: includes/class-backend.php:829
-#: includes/class-backend.php:976
-#: includes/class-backend.php:1169
-msgid "True"
+#: includes/class-backend.php:806
+#: includes/class-backend.php:953
+#: includes/class-backend.php:1146
+msgid "Choose Image"
 msgstr ""
 
 #: includes/class-backend.php:830
 #: includes/class-backend.php:977
 #: includes/class-backend.php:1170
-msgid "False"
+msgid "True"
 msgstr ""
 
-#: includes/class-backend.php:843
-#: includes/class-backend.php:990
-#: includes/class-backend.php:1183
-msgid "On"
+#: includes/class-backend.php:831
+#: includes/class-backend.php:978
+#: includes/class-backend.php:1171
+msgid "False"
 msgstr ""
 
 #: includes/class-backend.php:844
 #: includes/class-backend.php:991
 #: includes/class-backend.php:1184
+msgid "On"
+msgstr ""
+
+#: includes/class-backend.php:845
+#: includes/class-backend.php:992
+#: includes/class-backend.php:1185
 msgid "Off"
 msgstr ""
 
-#: includes/class-backend.php:906
-#: includes/class-backend.php:1053
-#: includes/class-backend.php:1247
+#: includes/class-backend.php:907
+#: includes/class-backend.php:1054
+#: includes/class-backend.php:1248
 msgid "Update"
 msgstr ""
 
 #. translators: taxonomy
-#: includes/class-backend.php:1057
+#: includes/class-backend.php:1058
 #, php-format
 msgid "You are editing the taxonomy \"%1$s\" of \"%2$s\"."
 msgstr ""
 
-#: includes/class-backend.php:1249
-#: includes/class-backend.php:1252
-#: includes/class-backend.php:1270
+#: includes/class-backend.php:1250
+#: includes/class-backend.php:1253
+#: includes/class-backend.php:1271
 msgid "Have an error!"
 msgstr ""
 
-#: includes/class-backend.php:1620
+#: includes/class-backend.php:1621
 msgid "Dimensions:"
 msgstr ""
 
-#: includes/class-backend.php:1620
+#: includes/class-backend.php:1621
 msgid "Weight:"
 msgstr ""
 
 #. translators: edit
-#: includes/class-backend.php:1774
-#: includes/class-backend.php:2137
-#: includes/class-backend.php:2380
-#: includes/class-backend.php:2491
+#: includes/class-backend.php:1775
+#: includes/class-backend.php:2138
+#: includes/class-backend.php:2381
+#: includes/class-backend.php:2492
 #, php-format
 msgid "Edit \"%1$s\" of #%2$s"
 msgstr ""
 
 #. translators: edit
-#: includes/class-backend.php:1774
-#: includes/class-backend.php:2137
-#: includes/class-backend.php:2380
-#: includes/class-backend.php:2491
+#: includes/class-backend.php:1775
+#: includes/class-backend.php:2138
+#: includes/class-backend.php:2381
+#: includes/class-backend.php:2492
 msgid "edit"
 msgstr ""
 
 #. translators: count
-#: includes/class-backend.php:1952
+#: includes/class-backend.php:1953
 #, php-format
 msgid "%s variation"
 msgid_plural "%s variations"
@@ -683,147 +683,147 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: product id
-#: includes/class-backend.php:1953
+#: includes/class-backend.php:1954
 #, php-format
 msgid "Variations of #%s"
 msgstr ""
 
-#: includes/class-backend.php:1969
+#: includes/class-backend.php:1970
 msgid "Edit"
 msgstr ""
 
 #. translators: post title
-#: includes/class-backend.php:1979
+#: includes/class-backend.php:1980
 #, php-format
 msgid "Restore &#8220;%s&#8221; from the Trash"
 msgstr ""
 
-#: includes/class-backend.php:1980
+#: includes/class-backend.php:1981
 msgid "Restore"
 msgstr ""
 
 #. translators: post title
-#: includes/class-backend.php:1987
+#: includes/class-backend.php:1988
 #, php-format
 msgid "Move &#8220;%s&#8221; to the Trash"
 msgstr ""
 
-#: includes/class-backend.php:1988
+#: includes/class-backend.php:1989
 msgctxt "verb"
 msgid "Trash"
 msgstr ""
 
 #. translators: post title
-#: includes/class-backend.php:1997
+#: includes/class-backend.php:1998
 #, php-format
 msgid "Delete &#8220;%s&#8221; permanently"
 msgstr ""
 
-#: includes/class-backend.php:1998
+#: includes/class-backend.php:1999
 msgid "Delete Permanently"
 msgstr ""
 
 #. translators: post title
-#: includes/class-backend.php:2011
+#: includes/class-backend.php:2012
 #, php-format
 msgid "Preview &#8220;%s&#8221;"
 msgstr ""
 
-#: includes/class-backend.php:2012
+#: includes/class-backend.php:2013
 msgid "Preview"
 msgstr ""
 
 #. translators: post title
-#: includes/class-backend.php:2020
+#: includes/class-backend.php:2021
 #, php-format
 msgid "View &#8220;%s&#8221;"
 msgstr ""
 
-#: includes/class-backend.php:2021
+#: includes/class-backend.php:2022
 msgid "View"
 msgstr ""
 
 #. translators: post id
-#: includes/class-backend.php:2033
+#: includes/class-backend.php:2034
 #, php-format
 msgid "Duplicate #%d"
 msgstr ""
 
-#: includes/class-backend.php:2136
-#: includes/class-backend.php:2379
-#: includes/class-backend.php:2490
+#: includes/class-backend.php:2137
+#: includes/class-backend.php:2380
+#: includes/class-backend.php:2491
 msgid "copy"
 msgstr ""
 
-#: includes/class-backend.php:2578
+#: includes/class-backend.php:2588
 msgid "Admin Columns"
 msgstr ""
 
-#: includes/class-backend.php:2592
+#: includes/class-backend.php:2602
 msgid "Premium"
 msgstr ""
 
 #. translators: stars
-#: includes/class-backend.php:2595
+#: includes/class-backend.php:2605
 #, php-format
 msgid "Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating."
 msgstr ""
 
-#: includes/class-backend.php:2598
+#: includes/class-backend.php:2608
 msgid "Reviews"
 msgstr ""
 
-#: includes/class-backend.php:2600
+#: includes/class-backend.php:2610
 msgid "Changelog"
 msgstr ""
 
-#: includes/class-backend.php:2602
+#: includes/class-backend.php:2612
 msgid "Discussion"
 msgstr ""
 
-#: includes/class-backend.php:2610
+#: includes/class-backend.php:2620
 msgid "Settings updated."
 msgstr ""
 
-#: includes/class-backend.php:2617
-#: includes/class-backend.php:2713
+#: includes/class-backend.php:2627
+#: includes/class-backend.php:2732
 msgid "Settings"
 msgstr ""
 
-#: includes/class-backend.php:2622
-#: includes/class-backend.php:2714
+#: includes/class-backend.php:2632
+#: includes/class-backend.php:2733
 msgid "Premium Version"
 msgstr ""
 
-#: includes/class-backend.php:2624
+#: includes/class-backend.php:2634
 msgid "Essential Kit"
 msgstr ""
 
-#: includes/class-backend.php:2641
+#: includes/class-backend.php:2651
 msgid "Personalized"
 msgstr ""
 
-#: includes/class-backend.php:2647
+#: includes/class-backend.php:2657
 msgid "Enable it to let each manager has their own columns organization. Their changes will not affect another."
 msgstr ""
 
-#: includes/class-backend.php:2651
+#: includes/class-backend.php:2661
 msgid "Enable JSON Editor"
 msgstr ""
 
-#: includes/class-backend.php:2657
+#: includes/class-backend.php:2667
 msgid "Enable JSON Editor to editing custom field in JSON format. It uses the library https://github.com/dblate/jquery.json-editor"
 msgstr ""
 
-#: includes/class-backend.php:2730
+#: includes/class-backend.php:2749
 msgid "Community support"
 msgstr ""
 
-#: includes/class-backend.php:2789
+#: includes/class-backend.php:2808
 msgid "No post to duplicate!"
 msgstr ""
 
-#: includes/class-backend.php:2824
+#: includes/class-backend.php:2843
 msgid "Copy creation failed, could not find original:"
 msgstr ""
 

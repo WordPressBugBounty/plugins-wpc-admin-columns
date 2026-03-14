@@ -49,6 +49,7 @@ class Wpcac_Backend {
 
         // settings
         add_action( 'admin_init', [ $this, 'register_settings' ] );
+        add_filter( 'pre_update_option', [ $this, 'last_saved' ], 10, 2 );
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_filter( 'plugin_action_links', [ $this, 'action_links' ], 10, 2 );
         add_filter( 'plugin_row_meta', [ $this, 'row_meta' ], 10, 2 );
@@ -2574,6 +2575,15 @@ class Wpcac_Backend {
         ] );
     }
 
+    function last_saved( $value, $option ) {
+        if ( $option == 'wpcac_settings' ) {
+            $value['_last_saved']    = current_time( 'timestamp' );
+            $value['_last_saved_by'] = get_current_user_id();
+        }
+
+        return $value;
+    }
+
     function admin_menu() {
         add_submenu_page( 'wpclever', esc_html__( 'WPC Admin Columns', 'wpc-admin-columns' ), esc_html__( 'Admin Columns', 'wpc-admin-columns' ), 'manage_options', 'wpclever-wpcac', [
                 $this,
@@ -2659,7 +2669,16 @@ class Wpcac_Backend {
                             </tr>
                             <tr class="submit">
                                 <th colspan="2">
-                                    <?php settings_fields( 'wpcac_settings' ); ?><?php submit_button(); ?>
+                                    <div class="wpclever_submit">
+                                        <?php
+                                        settings_fields( 'wpcac_settings' );
+                                        submit_button( '', 'primary', 'submit', false );
+
+                                        if ( function_exists( 'wpc_last_saved' ) ) {
+                                            wpc_last_saved( self::get_settings() );
+                                        }
+                                        ?>
+                                    </div>
                                 </th>
                             </tr>
                         </table>
