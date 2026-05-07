@@ -36,12 +36,8 @@
         wpcac_init_type();
         wpcac_init_data_type();
         wpcac_color_picker();
-        //wpcac_meta_fields();
     });
 
-    $(document).on('select2:open', () => {
-        document.querySelector('.select2-search__field').focus();
-    });
 
     $(document).on('click touch', '.wpcac-copy', function (e) {
         e.preventDefault();
@@ -66,13 +62,8 @@
 
         let $popup = $('#wpcac-popup-columns');
 
-        $popup.dialog({
-            minWidth: 460, title: $popup.attr('data-title'), modal: true, dialogClass: 'wpc-dialog', open: function () {
-                $('.ui-widget-overlay').bind('click', function () {
-                    $popup.dialog('close');
-                });
-            },
-        });
+        wpcac_modal_open($popup, $popup.attr('data-title'));
+        wpcac_meta_fields();
     });
 
     $(document).on('click touch', '.wpcac-edit', function (e) {
@@ -89,14 +80,8 @@
 
         $('#wpcac-popup-edit').html('').addClass('wpcac-popup-loading');
 
-        $('#wpcac-popup-edit').dialog({
-            minWidth: 460, title: title, modal: true, dialogClass: 'wpc-dialog', open: function () {
-                $('.ui-widget-overlay').bind('click', function () {
-                    $('#wpcac-popup-edit').dialog('close');
-                });
-            }, close: function () {
-                $json_display = null;
-            },
+        wpcac_modal_open($('#wpcac-popup-edit'), title, function () {
+            $json_display = null;
         });
 
         var data = {
@@ -150,7 +135,7 @@
         $.post(ajaxurl, data, function (response) {
             if (response.status) {
                 $('#wpcac-popup-edit').removeClass('wpcac-popup-loading');
-                $('#wpcac-popup-edit').dialog('close');
+                wpcac_modal_close($('#wpcac-popup-edit'));
 
                 if (parseInt(id) > 0) {
                     $('.wpcac-value[data-id="' + id + '"][data-field="' + field + '"]').html(response.value);
@@ -196,7 +181,7 @@
 
             $.post(ajaxurl, data, function (response) {
                 $('#wpcac-popup-columns').removeClass('wpcac-popup-loading');
-                $('#wpcac-popup-columns').dialog('close');
+                wpcac_modal_close($('#wpcac-popup-columns'));
                 location.reload();
             });
         }
@@ -210,13 +195,7 @@
 
         $('#wpcac-popup-view').html('').addClass('wpcac-popup-loading');
 
-        $('#wpcac-popup-view').dialog({
-            minWidth: 460, title: title, modal: true, dialogClass: 'wpc-dialog', open: function () {
-                $('.ui-widget-overlay').bind('click', function () {
-                    $('#wpcac-popup-view').dialog('close');
-                });
-            },
-        });
+        wpcac_modal_open($('#wpcac-popup-view'), title);
 
         var data = {
             action: 'wpcac_product_variations', id: id, nonce: wpcac_vars.nonce,
@@ -276,7 +255,7 @@
 
         $.post(ajaxurl, data, function (response) {
             $('#wpcac-popup-columns').removeClass('wpcac-popup-loading');
-            $('#wpcac-popup-columns').dialog('close');
+            wpcac_modal_close($('#wpcac-popup-columns'));
             location.reload();
         });
     });
@@ -295,14 +274,17 @@
             wpcac_init_type();
             wpcac_init_data_type();
             wpcac_color_picker();
-            //wpcac_meta_fields();
+            wpcac_meta_fields();
             $('#wpcac-popup-columns').removeClass('wpcac-popup-loading');
         });
     });
 
     $(document).on('click touch', '.wpcac-column-heading', function (e) {
         if (($(e.target).closest('.wpcac-enable-btn').length === 0)) {
-            $(this).closest('.wpcac-column').toggleClass('active');
+            var $column = $(this).closest('.wpcac-column');
+
+            $column.toggleClass('active');
+            $column.find('.wpcac-column-content').slideToggle(200);
         }
     });
 
@@ -513,7 +495,7 @@
     }
 
     function wpcac_init_select2() {
-        $('.wpcac-select2').select2({
+        $('.wpcac-select2').selectWoo({
             ajax: {
                 url: ajaxurl, dataType: 'json', delay: 250, data: function (params) {
                     return {
@@ -537,7 +519,7 @@
             }, minimumInputLength: 1,
         });
 
-        $('.wpcac-select2-tags').select2({
+        $('.wpcac-select2-tags').selectWoo({
             tags: true, ajax: {
                 url: ajaxurl, dataType: 'json', delay: 250, data: function (params) {
                     return {
@@ -576,8 +558,62 @@
     }
 
     function wpcac_meta_fields() {
-        $('.wpcac_meta_fields').select2({
-            dropdownParent: $('#wpcac-popup-columns'),
-        });
+        $('.wpcac_meta_fields:not(.select2-hidden-accessible)').selectWoo();
     }
+
+    // Custom modal helpers
+    function wpcac_modal_open($popup, title, onClose) {
+        // Build modal wrapper if not exists
+        if (!$popup.closest('.wpcac-modal').length) {
+            var $btns = $popup.find('.wpcac-btns').detach();
+
+            $popup.wrap('<div class="wpcac-modal"><div class="wpcac-modal-body"><div class="wpcac-modal-content"></div></div></div>');
+
+            $popup.closest('.wpcac-modal-body').prepend(
+                '<div class="wpcac-modal-header">' +
+                '<span class="wpcac-modal-title"></span>' +
+                '<span class="wpcac-modal-close">&times;</span>' +
+                '</div>'
+            );
+
+            // Move action buttons to footer
+            if ($btns.length) {
+                $popup.closest('.wpcac-modal-body').append(
+                    $('<div class="wpcac-modal-footer"></div>').append($btns)
+                );
+            }
+        }
+
+        var $modal = $popup.closest('.wpcac-modal');
+
+        // Set title
+        $modal.find('.wpcac-modal-title').text(title || '');
+
+        // Store close callback
+        $modal.data('onClose', onClose || null);
+
+        // Show modal
+        $modal.addClass('wpcac-modal-active');
+        $popup.show();
+    }
+
+    function wpcac_modal_close($popup) {
+        var $modal = $popup.closest('.wpcac-modal');
+        var onClose = $modal.data('onClose');
+
+        $modal.removeClass('wpcac-modal-active');
+        $popup.hide();
+
+        if (typeof onClose === 'function') {
+            onClose();
+        }
+    }
+
+    // Close modal on overlay or close button click
+    $(document).on('click touch', '.wpcac-modal', function (e) {
+        if ($(e.target).hasClass('wpcac-modal') || $(e.target).hasClass('wpcac-modal-close')) {
+            var $popup = $(this).find('.wpcac-popup');
+            wpcac_modal_close($popup);
+        }
+    });
 })(jQuery);

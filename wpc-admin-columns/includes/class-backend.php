@@ -143,9 +143,9 @@ class Wpcac_Backend {
         wp_enqueue_style( 'intro', WPCAC_URI . 'assets/libs/intro/introjs.css' );
         wp_enqueue_script( 'intro', WPCAC_URI . 'assets/libs/intro/intro.js', [ 'jquery' ], WPCAC_VERSION, true );
 
-        // select2
-        wp_enqueue_style( 'select2', WPCAC_URI . 'assets/libs/select2/select2.min.css' );
-        wp_enqueue_script( 'select2', WPCAC_URI . 'assets/libs/select2/select2.min.js', [ 'jquery' ], WPCAC_VERSION, true );
+        // selectWoo
+        wp_enqueue_style( 'select2' );
+        wp_enqueue_script( 'selectWoo' );
 
         if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
             wp_enqueue_script( 'json-editor', WPCAC_URI . 'assets/libs/json-editor/jquery.json-editor.min.js', [ 'jquery' ], WPCAC_VERSION, true );
@@ -157,7 +157,6 @@ class Wpcac_Backend {
         wp_enqueue_script( 'wpcac-backend', WPCAC_URI . 'assets/js/backend.js', [
                 'jquery',
                 'jquery-ui-sortable',
-                'jquery-ui-dialog',
                 'wp-color-picker'
         ], WPCAC_VERSION, true );
         wp_localize_script( 'wpcac-backend', 'wpcac_vars', [
@@ -2132,7 +2131,8 @@ class Wpcac_Backend {
                     $column_content = ! empty( $saved_columns[ $column ]['text'] ) ? do_shortcode( str_replace( '{post_id}', $postid, $saved_columns[ $column ]['text'] ) ) : $postid;
             }
 
-            if ( $editable ) {
+            // Taxonomy/product_taxonomy already handle their own edit button inside the switch
+            if ( $editable && ! in_array( $column_type, [ 'taxonomy', 'product_taxonomy' ] ) ) {
                 $column_content .= '<span class="wpcac-value-actions">';
                 $column_content .= '<a href="#" class="wpcac-copy hint--top" aria-label="' . esc_attr__( 'Copy', 'wpc-admin-columns' ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'copy', 'wpc-admin-columns' ) . '</span></a>';
                 $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( /* translators: edit */ esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $field, $postid ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $postid ) . '" data-field="' . esc_attr( $field ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
