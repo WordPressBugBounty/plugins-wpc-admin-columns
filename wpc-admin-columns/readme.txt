@@ -2,9 +2,9 @@
 Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: wp, wpc, admin, columns, backend
-Tested up to: 6.9
-Version: 2.3.0
-Stable tag: 2.3.0
+Tested up to: 7.0
+Version: 2.3.1
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Playground: true
@@ -84,6 +84,10 @@ Please try other plugins from us:
 3. All done!
 
 == Changelog ==
+
+= 2.3.1 =
+* Fixed: Minor CSS/JS issues in the backend
+* Updated: Compatible with WP 7.0 & Woo 10.8
 
 = 2.3.0 =
 * Fixed: New modal function to work with selectWoo

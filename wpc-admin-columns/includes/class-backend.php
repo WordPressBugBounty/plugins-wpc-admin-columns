@@ -21,7 +21,6 @@ class Wpcac_Backend {
     public function __construct() {
         self::$settings = (array) get_option( 'wpcac_settings', [] );
 
-        add_action( 'init', [ $this, 'init' ] );
         add_action( 'wp_loaded', [ $this, 'wp_loaded' ] );
         add_action( 'admin_init', [ $this, 'admin_init' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -54,12 +53,6 @@ class Wpcac_Backend {
         add_filter( 'plugin_action_links', [ $this, 'action_links' ], 10, 2 );
         add_filter( 'plugin_row_meta', [ $this, 'row_meta' ], 10, 2 );
     }
-
-    function init() {
-        // load text-domain
-        load_plugin_textdomain( 'wpc-admin-columns', false, basename( WPCAC_DIR ) . '/languages/' );
-    }
-
     function wp_loaded() {
         self::$post_types       = get_post_types(); // get all registered post types
         self::$taxonomies       = get_taxonomies(); // get all registered taxonomies

@@ -20,6 +20,9 @@
   display: flex !important;
   align-items: center !important;
 }
+.wpcac-btn .dashicons {
+  line-height: 1 !important;
+}
 
 .woocommerce-page .wpcac-btn {
   height: 32px;
