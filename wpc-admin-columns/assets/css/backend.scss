@@ -213,6 +213,13 @@
   }
 }
 
+// Ensure select2 dropdown renders above the wpcac modal (z-index: 100102).
+// The dropdown is appended to body by select2, so we target the custom class
+// added via the dropdownCssClass option instead of a descendant selector.
+.wpcac-select2-dropdown {
+  z-index: 100200;
+}
+
 #wpcac-popup-edit, #wpcac-popup-columns {
   &.wpcac-popup-loading {
     min-height: 100px !important;

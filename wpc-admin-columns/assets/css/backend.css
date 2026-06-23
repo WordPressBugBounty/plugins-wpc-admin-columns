@@ -170,6 +170,10 @@
   margin-right: 5px;
 }
 
+.wpcac-select2-dropdown {
+  z-index: 100200;
+}
+
 #wpcac-popup-edit.wpcac-popup-loading, #wpcac-popup-columns.wpcac-popup-loading {
   min-height: 100px !important;
 }
@@ -854,5 +858,3 @@ body.wpcac-horizontal-scroll .wpcac-horizontal-scroll-table table.wp-list-table.
 input[type=search] {
   -webkit-appearance: textfield !important;
 }
-
-/*# sourceMappingURL=backend.css.map */

@@ -3,12 +3,12 @@
 Plugin Name: WPC Admin Columns
 Plugin URI: https://wpclever.net/
 Description: Manage and organize columns in the products, orders, and any post-types lists in the admin panel.
-Version: 2.3.1
+Version: 2.3.2
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-admin-columns
 Domain Path: /languages/
-Requires at least: 4.0
+Requires at least: 5.9
 Tested up to: 7.0
 Playground: true
 License: GPLv2 or later
@@ -17,7 +17,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.3.1' );
+! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.3.2' );
 ! defined( 'WPCAC_LITE' ) && define( 'WPCAC_LITE', __FILE__ );
 ! defined( 'WPCAC_FILE' ) && define( 'WPCAC_FILE', __FILE__ );
 ! defined( 'WPCAC_URI' ) && define( 'WPCAC_URI', plugin_dir_url( __FILE__ ) );

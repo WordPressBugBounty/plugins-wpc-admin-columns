@@ -236,8 +236,10 @@ class Wpcac_Duplicate {
 			}
 
 			if ( apply_filters( 'wpcac_duplicate_order_add_note', true ) ) {
-				$copyOrder->add_order_note( sprintf( /*translators: order id */ esc_html__( 'Cloned Order from #%d', 'wpc-admin-columns' ), $order_id ) );
-				$order->add_order_note( sprintf( /*translators: order id */ esc_html__( 'Order cloned to #%d', 'wpc-admin-columns' ), $copyOrder->get_id() ) );
+				// translators: %d is the original order ID being cloned from
+				$copyOrder->add_order_note( sprintf( esc_html__( 'Cloned Order from #%d', 'wpc-admin-columns' ), $order_id ) );
+				// translators: %d is the new cloned order ID
+				$order->add_order_note( sprintf( esc_html__( 'Order cloned to #%d', 'wpc-admin-columns' ), $copyOrder->get_id() ) );
 			}
 
 			$copyOrder->calculate_totals();

@@ -130,18 +130,23 @@ class Wpcac_Backend {
         wp_enqueue_style( 'wp-color-picker' );
 
         // hint
-        wp_enqueue_style( 'hint', WPCAC_URI . 'assets/css/hint.css' );
+        wp_enqueue_style( 'hint', WPCAC_URI . 'assets/css/hint.css', [], WPCAC_VERSION );
 
         // intro
-        wp_enqueue_style( 'intro', WPCAC_URI . 'assets/libs/intro/introjs.css' );
+        wp_enqueue_style( 'intro', WPCAC_URI . 'assets/libs/intro/introjs.css', [], WPCAC_VERSION );
         wp_enqueue_script( 'intro', WPCAC_URI . 'assets/libs/intro/intro.js', [ 'jquery' ], WPCAC_VERSION, true );
 
-        // selectWoo
+        // select2 – always loaded from local bundle, no WooCommerce dependency
+        wp_register_style( 'select2', WPCAC_URI . 'assets/libs/select2/select2.min.css', [], WPCAC_VERSION );
         wp_enqueue_style( 'select2' );
-        wp_enqueue_script( 'selectWoo' );
+        wp_register_script( 'select2', WPCAC_URI . 'assets/libs/select2/select2.full.min.js', [ 'jquery' ], WPCAC_VERSION, true );
+        wp_enqueue_script( 'select2' );
 
         if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
-            wp_enqueue_script( 'json-editor', WPCAC_URI . 'assets/libs/json-editor/jquery.json-editor.min.js', [ 'jquery' ], WPCAC_VERSION, true );
+            // Use WordPress core's CodeMirror (wp-codemirror) for JSON editing
+            // instead of a third-party bundled library.
+            $cm_settings = wp_enqueue_code_editor( [ 'type' => 'application/json' ] );
+            wp_localize_script( 'wpcac-backend', 'wpcac_cm_settings', $cm_settings ?: [] );
         }
 
         wp_enqueue_style( 'wpcac-backend', WPCAC_URI . 'assets/css/backend.css', [], WPCAC_VERSION );
@@ -156,7 +161,7 @@ class Wpcac_Backend {
                         'nonce'             => wp_create_nonce( 'wpcac-security' ),
                         'remove_confirm'    => esc_html__( 'Are you sure?', 'wpc-admin-columns' ),
                         'reset_confirm'     => esc_html__( 'All column organization on this page will be removed. Are you sure?', 'wpc-admin-columns' ),
-                        'copy'              => esc_html__( 'Copy', 'wpc-admin-columns' ),
+                        'copy'             => esc_html__( 'Copy', 'wpc-admin-columns' ),
                         'copied'            => esc_html__( 'Copied', 'wpc-admin-columns' ),
                         'enabled'           => esc_html__( 'Enabled', 'wpc-admin-columns' ),
                         'disabled'          => esc_html__( 'Disabled', 'wpc-admin-columns' ),
@@ -165,7 +170,7 @@ class Wpcac_Backend {
                         'media_title'       => esc_html__( 'Custom Image', 'wpc-admin-columns' ),
                         'intro_done'        => esc_html__( 'Got it!', 'wpc-admin-columns' ),
                         'intro_text'        => esc_html__( 'Click here to take control of columns. Add, remove, or rearrange them as you wish.', 'wpc-admin-columns' ),
-                        'intro'             => get_user_meta( get_current_user_id(), 'wpcac_intro_' . WPCAC_VERSION, true )
+                        'intro'             => get_user_meta( get_current_user_id(), 'wpcac_intro_' . WPCAC_VERSION, true ),
                 ]
         );
     }
@@ -260,8 +265,12 @@ class Wpcac_Backend {
                 <?php esc_html_e( 'Columns', 'wpc-admin-columns' ); ?>
             </button>
         </div>
+        <?php
+        // translators: %s is the screen/post type key (e.g. 'post', 'page')
+        $wpcac_popup_title = esc_attr( sprintf( esc_html__( 'Columns Manager › %s', 'wpc-admin-columns' ), $screen_key ) );
+        ?>
         <div class="wpcac-popup wpcac-popup-columns" id="wpcac-popup-columns"
-             data-title="<?php echo esc_attr( sprintf( /* translators: screen */ esc_html__( 'Columns Manager › %s', 'wpc-admin-columns' ), $screen_key ) ); ?>">
+             data-title="<?php echo $wpcac_popup_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped above ?>">
             <?php
             if ( ( $screen_key === 'shop_order' ) && ( get_option( 'woocommerce_custom_orders_table_enabled' ) === 'yes' ) ) {
                 echo '<div style="color: #c9356e;padding: 10px;border-radius: 4px;border: 1px dashed #c9356e;margin-bottom: 10px;">* Manage order columns in HPOS (High-performance order storage) mode only available on Premium Version. Click <a href="https://wpclever.net/downloads/wpc-admin-columns/?utm_source=pro&utm_medium=wpcac&utm_campaign=wporg" target="_blank">here</a> to buy for just $29!</div>';
@@ -706,15 +715,16 @@ class Wpcac_Backend {
         }
 
         $screen_key = sanitize_key( $_POST['screen_key'] ?? '' );
-        $form_data  = sanitize_post( $_POST['form_data'] ?? '' );
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized per-field after wp_parse_str()
+        $raw_form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ) : '';
 
-        if ( ! empty( $screen_key ) && ! empty( $form_data ) ) {
+        if ( ! empty( $screen_key ) && ! empty( $raw_form_data ) ) {
             $columns = [];
-            parse_str( $form_data, $columns );
+            wp_parse_str( $raw_form_data, $columns );
 
             if ( isset( $columns['wpcac_columns'] ) && is_array( $columns['wpcac_columns'] ) ) {
                 $columns_name = self::get_columns_name( $screen_key );
-                update_option( $columns_name, $columns['wpcac_columns'] );
+                update_option( $columns_name, self::sanitize_array( $columns['wpcac_columns'] ) );
             }
         }
 
@@ -744,10 +754,10 @@ class Wpcac_Backend {
         $post_id = absint( sanitize_key( $_POST['id'] ?? 0 ) );
         $user_id = absint( sanitize_key( $_POST['uid'] ?? 0 ) );
         $term_id = absint( sanitize_key( $_POST['tid'] ?? 0 ) );
-        $field   = sanitize_text_field( $_POST['field'] ?? '' );
-        $type    = sanitize_text_field( $_POST['type'] ?? '' );
-        $name    = sanitize_text_field( $_POST['name'] ?? '' );
-        $key     = sanitize_text_field( $_POST['key'] ?? '' );
+        $field   = sanitize_text_field( wp_unslash( $_POST['field'] ?? '' ) );
+        $type    = sanitize_text_field( wp_unslash( $_POST['type'] ?? '' ) );
+        $name    = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+        $key     = sanitize_text_field( wp_unslash( $_POST['key'] ?? '' ) );
 
         if ( ! empty( $field ) ) {
             if ( ! empty( $term_id ) ) {
@@ -766,7 +776,8 @@ class Wpcac_Backend {
                     }
                 }
 
-                echo '<p>' . esc_html( sprintf( /* translators: field */ esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), $field, '[#' . $term_id . ']' ) ) . '</p>';
+                // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term identifier
+                echo '<p>' . esc_html( sprintf(  esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), $field, '[#' . $term_id . ']' ) ) . '</p>';
 
                 switch ( $type ) {
                     case 'text':
@@ -885,7 +896,6 @@ class Wpcac_Backend {
                     case 'json':
                         if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
                             echo '<textarea id="wpcac-json-editor" class="wpcac-json-editor wpcac-edit-value" autocomplete="off">' . esc_textarea( $value ) . '</textarea>';
-                            echo '<pre id="wpcac-json-display" class="wpcac-json-display"></pre>';
                             echo '<div id="wpcac-json-error" class="wpcac-json-error"></div>';
                         } else {
                             echo '<textarea class="wpcac-edit-value">' . esc_textarea( $value ) . '</textarea>';
@@ -913,7 +923,8 @@ class Wpcac_Backend {
                     }
                 }
 
-                echo '<p>' . esc_html( sprintf( /* translators: field */ esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), $field, '[#' . $user_id . ']' ) ) . '</p>';
+                // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term identifier
+                echo '<p>' . esc_html( sprintf(  esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), $field, '[#' . $user_id . ']' ) ) . '</p>';
 
                 switch ( $type ) {
                     case 'text':
@@ -1032,7 +1043,6 @@ class Wpcac_Backend {
                     case 'json':
                         if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
                             echo '<textarea id="wpcac-json-editor" class="wpcac-json-editor wpcac-edit-value" autocomplete="off">' . esc_textarea( $value ) . '</textarea>';
-                            echo '<pre id="wpcac-json-display" class="wpcac-json-display"></pre>';
                             echo '<div id="wpcac-json-error" class="wpcac-json-error"></div>';
                         } else {
                             echo '<textarea class="wpcac-edit-value">' . esc_textarea( $value ) . '</textarea>';
@@ -1047,7 +1057,8 @@ class Wpcac_Backend {
             } elseif ( ! empty( $post_id ) ) {
                 if ( $type === 'taxonomy' ) {
                     // taxonomy
-                    echo '<p>' . sprintf( /* translators: taxonomy */ esc_html__( 'You are editing the taxonomy "%1$s" of "%2$s".', 'wpc-admin-columns' ), esc_html( $field ), esc_html( '[#' . $post_id . '] ' . get_the_title( $post_id ) ) ) . '</p>';
+                    // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term identifier
+                    echo '<p>' . sprintf(  esc_html__( 'You are editing the taxonomy "%1$s" of "%2$s".', 'wpc-admin-columns' ), esc_html( $field ), esc_html( '[#' . $post_id . '] ' . get_the_title( $post_id ) ) ) . '</p>';
 
                     if ( is_taxonomy_hierarchical( $field ) ) {
                         $selected = [];
@@ -1106,7 +1117,8 @@ class Wpcac_Backend {
                         }
                     }
 
-                    echo '<p>' . esc_html( sprintf( /* translators: field */ esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), esc_html( $field ), esc_html( '[#' . $post_id . '] ' . get_the_title( $post_id ) ) ) ) . '</p>';
+                    // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term identifier
+                    echo '<p>' . esc_html( sprintf(  esc_html__( 'You are editing the field "%1$s" of "%2$s".', 'wpc-admin-columns' ), esc_html( $field ), esc_html( '[#' . $post_id . '] ' . get_the_title( $post_id ) ) ) ) . '</p>';
 
                     switch ( $type ) {
                         case 'text':
@@ -1225,7 +1237,6 @@ class Wpcac_Backend {
                         case 'json':
                             if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
                                 echo '<textarea id="wpcac-json-editor" class="wpcac-json-editor wpcac-edit-value" autocomplete="off">' . esc_textarea( $value ) . '</textarea>';
-                                echo '<pre id="wpcac-json-display" class="wpcac-json-display"></pre>';
                                 echo '<div id="wpcac-json-error" class="wpcac-json-error"></div>';
                             } else {
                                 echo '<textarea class="wpcac-edit-value">' . esc_textarea( $value ) . '</textarea>';
@@ -1256,8 +1267,8 @@ class Wpcac_Backend {
         $post_id  = absint( sanitize_key( $_POST['id'] ?? 0 ) );
         $user_id  = absint( sanitize_key( $_POST['uid'] ?? 0 ) );
         $term_id  = absint( sanitize_key( $_POST['tid'] ?? 0 ) );
-        $field    = sanitize_text_field( $_POST['field'] ?? '' );
-        $type     = sanitize_text_field( $_POST['type'] ?? '' );
+        $field    = sanitize_text_field( wp_unslash( $_POST['field'] ?? '' ) );
+        $type     = sanitize_text_field( wp_unslash( $_POST['type'] ?? '' ) );
         $response = [
                 'status' => 0,
                 'value'  => esc_html__( 'Have an error!', 'wpc-admin-columns' )
@@ -1269,11 +1280,13 @@ class Wpcac_Backend {
             }
 
             // term field
-            if ( ! empty( $_POST['value'] ) ) {
-                if ( is_array( $_POST['value'] ) ) {
-                    $value = self::sanitize_array( $_POST['value'] );
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
+            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+            if ( ! empty( $raw_value ) ) {
+                if ( is_array( $raw_value ) ) {
+                    $value = self::sanitize_array( $raw_value );
                 } else {
-                    $value = sanitize_text_field( $_POST['value'] );
+                    $value = sanitize_text_field( $raw_value );
                 }
             } else {
                 $value = '';
@@ -1349,11 +1362,13 @@ class Wpcac_Backend {
             }
 
             // user field
-            if ( ! empty( $_POST['value'] ) ) {
-                if ( is_array( $_POST['value'] ) ) {
-                    $value = self::sanitize_array( $_POST['value'] );
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
+            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+            if ( ! empty( $raw_value ) ) {
+                if ( is_array( $raw_value ) ) {
+                    $value = self::sanitize_array( $raw_value );
                 } else {
-                    $value = sanitize_text_field( $_POST['value'] );
+                    $value = sanitize_text_field( $raw_value );
                 }
             } else {
                 $value = '';
@@ -1431,11 +1446,13 @@ class Wpcac_Backend {
             // post field
             if ( $type === 'taxonomy' ) {
                 // taxonomy
-                if ( ! empty( $_POST['value'] ) ) {
-                    if ( is_array( $_POST['value'] ) ) {
-                        $value = self::sanitize_array( $_POST['value'] );
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
+                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+                if ( ! empty( $raw_value ) ) {
+                    if ( is_array( $raw_value ) ) {
+                        $value = self::sanitize_array( $raw_value );
                     } else {
-                        $value = sanitize_text_field( $_POST['value'] );
+                        $value = sanitize_text_field( $raw_value );
                     }
                 } else {
                     $value = '';
@@ -1466,11 +1483,13 @@ class Wpcac_Backend {
                 }
             } else {
                 // custom field
-                if ( ! empty( $_POST['value'] ) ) {
-                    if ( is_array( $_POST['value'] ) ) {
-                        $value = self::sanitize_array( $_POST['value'] );
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
+                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+                if ( ! empty( $raw_value ) ) {
+                    if ( is_array( $raw_value ) ) {
+                        $value = self::sanitize_array( $raw_value );
                     } else {
-                        $value = sanitize_text_field( $_POST['value'] );
+                        $value = sanitize_text_field( $raw_value );
                     }
                 } else {
                     $value = '';
@@ -1545,15 +1564,16 @@ class Wpcac_Backend {
     }
 
     function ajax_search_terms() {
-        $return = [];
+        check_ajax_referer( 'wpcac-security', 'nonce' );
 
+        $return = [];
         $args = [
-                'taxonomy'   => sanitize_text_field( $_REQUEST['taxonomy'] ),
+                'taxonomy'   => sanitize_text_field( wp_unslash( $_REQUEST['taxonomy'] ?? '' ) ),
                 'orderby'    => 'id',
                 'order'      => 'ASC',
                 'hide_empty' => false,
                 'fields'     => 'all',
-                'name__like' => sanitize_text_field( $_REQUEST['term'] ),
+                'name__like' => sanitize_text_field( wp_unslash( $_REQUEST['term'] ?? '' ) ),
         ];
 
         $terms = get_terms( $args );
@@ -1568,15 +1588,17 @@ class Wpcac_Backend {
     }
 
     function ajax_search_tags() {
+        check_ajax_referer( 'wpcac-security', 'nonce' );
+
         $return = [];
 
         $args = [
-                'taxonomy'   => sanitize_text_field( $_REQUEST['taxonomy'] ),
+                'taxonomy'   => sanitize_text_field( wp_unslash( $_REQUEST['taxonomy'] ?? '' ) ),
                 'orderby'    => 'id',
                 'order'      => 'ASC',
                 'hide_empty' => false,
                 'fields'     => 'all',
-                'name__like' => sanitize_text_field( $_REQUEST['term'] ),
+                'name__like' => sanitize_text_field( wp_unslash( $_REQUEST['term'] ?? '' ) ),
         ];
 
         $terms = get_terms( $args );
@@ -1620,7 +1642,7 @@ class Wpcac_Backend {
 
                 $variations_html .= '</div>';
 
-                echo apply_filters( 'wpcac_product_variations_html', $variations_html, $product_id );
+                echo wp_kses_post( apply_filters( 'wpcac_product_variations_html', $variations_html, $product_id ) );
             }
         }
 
@@ -1764,7 +1786,8 @@ class Wpcac_Backend {
 
                         if ( $editable ) {
                             $column_content .= '<span class="wpcac-value-actions">';
-                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( /* translators: edit */ esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['taxonomy'], $postid ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $postid ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['taxonomy'] ) . '" data-type="taxonomy"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
+                                                        // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term ID
+                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf(  esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['taxonomy'], $postid ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $postid ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['taxonomy'] ) . '" data-type="taxonomy"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
                             $column_content .= '</span>';
                         }
                     }
@@ -1942,8 +1965,10 @@ class Wpcac_Backend {
                 case 'product_variations':
                     if ( class_exists( 'WC_Product' ) && ( $product = wc_get_product( $postid ) ) && $product->is_type( 'variable' ) ) {
                         $count          = count( $product->get_children() );
-                        $count_txt      = apply_filters( 'wpcac_product_variations_txt', sprintf( /* translators: count */ _n( '%s variation', '%s variations', $count, 'wpc-admin-columns' ), $count ), $product );
-                        $column_content = '<a href="#" class="wpcac-product-variations-btn" data-id="' . esc_attr( $postid ) . '" data-title="' . esc_attr( sprintf( /* translators: product id */ esc_html__( 'Variations of #%s', 'wpc-admin-columns' ), $postid ) ) . '">' . esc_html( $count_txt ) . '</a>';
+                        // translators: %s is the number of product variations
+                        $count_txt      = apply_filters( 'wpcac_product_variations_txt', sprintf( _n( '%s variation', '%s variations', $count, 'wpc-admin-columns' ), $count ), $product );
+                                        // translators: post id
+                        $column_content = '<a href="#" class="wpcac-product-variations-btn" data-id="' . esc_attr( $postid ) . '" data-title="' . esc_attr( sprintf(  esc_html__( 'Variations of #%s', 'wpc-admin-columns' ), $postid ) ) . '">' . esc_html( $count_txt ) . '</a>';
                     }
 
                     break;
@@ -1968,7 +1993,7 @@ class Wpcac_Backend {
                             $actions['untrash'] = sprintf(
                                     '<a href="%s" aria-label="%s">%s</a>',
                                     wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $post->ID ) ), 'untrash-post_' . $post->ID ),
-                                    /* translators: post title */
+                                    // translators: post title
                                     esc_attr( sprintf( esc_html__( 'Restore &#8220;%s&#8221; from the Trash', 'wpc-admin-columns' ), $title ) ),
                                     esc_html__( 'Restore', 'wpc-admin-columns' )
                             );
@@ -1976,7 +2001,7 @@ class Wpcac_Backend {
                             $actions['trash'] = sprintf(
                                     '<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
                                     get_delete_post_link( $post->ID ),
-                                    /* translators: post title */
+                                    // translators: post title
                                     esc_attr( sprintf( esc_html__( 'Move &#8220;%s&#8221; to the Trash', 'wpc-admin-columns' ), $title ) ),
                                     _x( 'Trash', 'verb', 'wpc-admin-columns' )
                             );
@@ -1986,7 +2011,7 @@ class Wpcac_Backend {
                             $actions['delete'] = sprintf(
                                     '<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
                                     get_delete_post_link( $post->ID, '', true ),
-                                    /* translators: post title */
+                                    // translators: post title
                                     esc_attr( sprintf( esc_html__( 'Delete &#8220;%s&#8221; permanently', 'wpc-admin-columns' ), $title ) ),
                                     esc_html__( 'Delete Permanently', 'wpc-admin-columns' )
                             );
@@ -2000,7 +2025,7 @@ class Wpcac_Backend {
                                 $actions['view'] = sprintf(
                                         '<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
                                         esc_url( $preview_link ),
-                                        /* translators: post title */
+                                        // translators: post title
                                         esc_attr( sprintf( esc_html__( 'Preview &#8220;%s&#8221;', 'wpc-admin-columns' ), $title ) ),
                                         esc_html__( 'Preview', 'wpc-admin-columns' )
                                 );
@@ -2009,7 +2034,7 @@ class Wpcac_Backend {
                             $actions['view'] = sprintf(
                                     '<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
                                     get_permalink( $post->ID ),
-                                    /* translators: post title */
+                                    // translators: post title
                                     esc_attr( sprintf( esc_html__( 'View &#8220;%s&#8221;', 'wpc-admin-columns' ), $title ) ),
                                     esc_html__( 'View', 'wpc-admin-columns' )
                             );
@@ -2023,7 +2048,8 @@ class Wpcac_Backend {
                 case 'duplicate':
                 case 'product_duplicate':
                 case 'order_duplicate':
-                    $column_content = '<div class="wpcac-column-duplicate-content"><a href="' . esc_url( self::get_duplicate_link( $postid ) ) . '" class="wpcac-duplicate-btn hint--top" aria-label="' . esc_attr( sprintf( /* translators: post id */ esc_attr__( 'Duplicate #%d', 'wpc-admin-columns' ), $postid ) ) . '" data-id="' . esc_attr( $postid ) . '"><span class="dashicons dashicons-admin-page"></span></a></div>';
+                    // translators: %d is the post ID being duplicated
+                    $column_content = '<div class="wpcac-column-duplicate-content"><a href="' . esc_url( self::get_duplicate_link( $postid ) ) . '" class="wpcac-duplicate-btn hint--top" aria-label="' . esc_attr( sprintf(  esc_attr__( 'Duplicate #%d', 'wpc-admin-columns' ), $postid ) ) . '" data-id="' . esc_attr( $postid ) . '"><span class="dashicons dashicons-admin-page"></span></a></div>';
 
                     break;
                 case 'order_products':
@@ -2128,7 +2154,8 @@ class Wpcac_Backend {
             if ( $editable && ! in_array( $column_type, [ 'taxonomy', 'product_taxonomy' ] ) ) {
                 $column_content .= '<span class="wpcac-value-actions">';
                 $column_content .= '<a href="#" class="wpcac-copy hint--top" aria-label="' . esc_attr__( 'Copy', 'wpc-admin-columns' ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'copy', 'wpc-admin-columns' ) . '</span></a>';
-                $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( /* translators: edit */ esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $field, $postid ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $postid ) . '" data-field="' . esc_attr( $field ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
+                                // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term ID
+                $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf(  esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $field, $postid ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $postid ) . '" data-field="' . esc_attr( $field ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
                 $column_content .= '</span>';
             }
 
@@ -2371,7 +2398,8 @@ class Wpcac_Backend {
                         if ( $editable ) {
                             $column_content .= '<span class="wpcac-value-actions">';
                             $column_content .= '<a href="#" class="wpcac-copy hint--top" aria-label="' . esc_attr__( 'Copy', 'wpc-admin-columns' ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'copy', 'wpc-admin-columns' ) . '</span></a>';
-                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( /* translators: edit */ esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['field'], $media_id ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $media_id ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
+                                                        // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term ID
+                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf(  esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['field'], $media_id ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="' . esc_attr( $media_id ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
                             $column_content .= '</span>';
                         }
                     }
@@ -2482,7 +2510,8 @@ class Wpcac_Backend {
                         if ( $editable ) {
                             $column_content .= '<span class="wpcac-value-actions">';
                             $column_content .= '<a href="#" class="wpcac-copy hint--top" aria-label="' . esc_attr__( 'Copy', 'wpc-admin-columns' ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'copy', 'wpc-admin-columns' ) . '</span></a>';
-                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( /* translators: edit */ esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['field'], $term_id ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
+                            // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term ID
+                            $column_content .= '<a href="#" class="wpcac-edit hint--top" aria-label="' . esc_attr( sprintf( esc_html__( 'Edit "%1$s" of #%2$s', 'wpc-admin-columns' ), $saved_columns[ $column ]['field'], $term_id ) ) . '" data-name="' . esc_attr( $columns_name ) . '" data-key="' . esc_attr( $column ) . '" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '" data-type="' . esc_attr( $data_type ) . '"><span>' . esc_html__( 'edit', 'wpc-admin-columns' ) . '</span></a>';
                             $column_content .= '</span>';
                         }
                     }
@@ -2585,6 +2614,7 @@ class Wpcac_Backend {
     }
 
     function admin_menu_content() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only tab navigation, no data modification
         $active_tab = sanitize_key( $_GET['tab'] ?? 'settings' );
         ?>
         <div class="wpclever_settings_page wrap">
@@ -2595,7 +2625,10 @@ class Wpcac_Backend {
                     <div class="wpclever_settings_page_title"><?php echo esc_html__( 'WPC Admin Columns', 'wpc-admin-columns' ) . ' ' . esc_html( WPCAC_VERSION ) . ' ' . ( defined( 'WPCAC_PREMIUM' ) ? '<span class="premium" style="display: none">' . esc_html__( 'Premium', 'wpc-admin-columns' ) . '</span>' : '' ); ?></div>
                     <div class="wpclever_settings_page_desc about-text">
                         <p>
-                            <?php printf( /* translators: stars */ esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'wpc-admin-columns' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' ); ?>
+                            <?php
+                            // translators: %s is replaced with five gold star icons (★★★★★)
+                            printf( esc_html__( 'Thank you for using our plugin! If you are satisfied, please reward it a full five-star %s rating.', 'wpc-admin-columns' ), '<span style="color:#ffb900">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' );
+                            ?>
                             <br/>
                             <a href="<?php echo esc_url( WPCAC_REVIEWS ); ?>"
                                target="_blank"><?php esc_html_e( 'Reviews', 'wpc-admin-columns' ); ?></a> |
@@ -2608,7 +2641,7 @@ class Wpcac_Backend {
                 </div>
             </div>
             <h2></h2>
-            <?php if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) { ?>
+            <?php if ( isset( $_GET['settings-updated'] ) && absint( $_GET['settings-updated'] ) ) { ?>
                 <div class="notice notice-success is-dismissible">
                     <p><?php esc_html_e( 'Settings updated.', 'wpc-admin-columns' ); ?></p>
                 </div>
@@ -2657,7 +2690,7 @@ class Wpcac_Backend {
                                         <option value="yes" <?php selected( $json_editor, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-admin-columns' ); ?></option>
                                         <option value="no" <?php selected( $json_editor, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-admin-columns' ); ?></option>
                                     </select>
-                                    <span class="description"><?php esc_html_e( 'Enable JSON Editor to editing custom field in JSON format. It uses the library https://github.com/dblate/jquery.json-editor', 'wpc-admin-columns' ); ?></span>
+                                    <span class="description"><?php esc_html_e( 'Enable JSON Editor to edit custom fields in JSON format using the built-in WordPress code editor.', 'wpc-admin-columns' ); ?></span>
                                 </td>
                             </tr>
                             <tr class="submit">
@@ -2801,7 +2834,7 @@ class Wpcac_Backend {
             wp_die( esc_html__( 'No post to duplicate!', 'wpc-admin-columns' ) );
         }
 
-        $postid = ( isset( $_GET['post'] ) ? sanitize_text_field( $_GET['post'] ) : sanitize_text_field( $_POST['post'] ) );
+        $postid = ( isset( $_GET['post'] ) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
 
         check_admin_referer( 'wpcac-duplicate-' . $postid );
 
@@ -2833,7 +2866,7 @@ class Wpcac_Backend {
 
             exit;
         } else {
-            wp_die( esc_html__( 'Copy creation failed, could not find original:', 'wpc-admin-columns' ) . ' ' . htmlspecialchars( $postid ) );
+            wp_die( esc_html__( 'Copy creation failed, could not find original:', 'wpc-admin-columns' ) . ' ' . absint( $postid ) );
         }
     }
 

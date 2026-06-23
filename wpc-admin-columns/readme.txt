@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: wp, wpc, admin, columns, backend
 Tested up to: 7.0
-Version: 2.3.1
-Stable tag: 2.3.1
+Version: 2.3.2
+Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Playground: true
@@ -84,6 +84,10 @@ Please try other plugins from us:
 3. All done!
 
 == Changelog ==
+
+= 2.3.2 =
+* Fixed: Use select2 instead of selectWoo
+* Updated: Optimized the code
 
 = 2.3.1 =
 * Fixed: Minor CSS/JS issues in the backend

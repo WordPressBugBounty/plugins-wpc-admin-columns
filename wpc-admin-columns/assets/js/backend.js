@@ -5,7 +5,7 @@
         image_frame: null, images_frame: null, button: null, upload_id: null, post_id: wp.media.model.settings.post.id,
     };
 
-    let $json_display = null;
+    let $json_cm_editor = null;
 
     $(function () {
         // ready
@@ -81,7 +81,7 @@
         $('#wpcac-popup-edit').html('').addClass('wpcac-popup-loading');
 
         wpcac_modal_open($('#wpcac-popup-edit'), title, function () {
-            $json_display = null;
+            $json_cm_editor = null;
         });
 
         var data = {
@@ -288,20 +288,6 @@
         }
     });
 
-    $(document).on('click touch keyup', function (e) {
-        if ($json_display !== null) {
-            try {
-                var json = $json_display.get();
-
-                $('#wpcac-json-editor').val(JSON.stringify(json)).trigger('change');
-                $('#wpcac-json-error').html('');
-                $('.wpcac-edit-save').prop('disabled', false);
-            } catch (ex) {
-                $('#wpcac-json-error').html('Wrong JSON Format: ' + ex);
-                $('.wpcac-edit-save').prop('disabled', true);
-            }
-        }
-    });
 
     $(document).on('click touch', '.wpcac-image-remove', function (e) {
         e.preventDefault();
@@ -453,23 +439,33 @@
     }
 
     function wpcac_json_editor() {
-        if ($(document).find('#wpcac-json-editor').length && $(document).find('#wpcac-json-display').length) {
-            $json_display = new JsonEditor('#wpcac-json-display');
+        var $textarea = $(document).find('#wpcac-json-editor');
 
-            if ($('#wpcac-json-editor').val() !== '') {
-                $json_display.load(wpcac_json_editor_get_json());
-            } else {
-                $json_display.load({});
+        // Requires wp.codeEditor (wp-codemirror) enqueued via wp_enqueue_code_editor()
+        if ( !$textarea.length || typeof wp === 'undefined' || typeof wp.codeEditor === 'undefined' ) {
+            return;
+        }
+
+        // CodeMirror settings are passed from PHP via wp_localize_script
+        var settings = ( typeof wpcac_cm_settings !== 'undefined' && wpcac_cm_settings.codemirror )
+            ? wpcac_cm_settings
+            : { codemirror: { mode: 'application/json', lineNumbers: true, matchBrackets: true } };
+
+        $json_cm_editor = wp.codeEditor.initialize( $textarea, settings );
+
+        // Validate JSON on every change and sync value back to the textarea
+        $json_cm_editor.codemirror.on( 'change', function () {
+            var value = $json_cm_editor.codemirror.getValue();
+            try {
+                JSON.parse( value );
+                $textarea.val( value );
+                $( '#wpcac-json-error' ).html( '' );
+                $( '.wpcac-edit-save' ).prop( 'disabled', false );
+            } catch ( ex ) {
+                $( '#wpcac-json-error' ).html( 'Wrong JSON Format: ' + ex );
+                $( '.wpcac-edit-save' ).prop( 'disabled', true );
             }
-        }
-    }
-
-    function wpcac_json_editor_get_json() {
-        try {
-            return JSON.parse($('#wpcac-json-editor').val());
-        } catch (ex) {
-            $('#wpcac-json-error').html('Wrong JSON Format: ' + ex);
-        }
+        } );
     }
 
     function wpcac_sortable() {
@@ -495,12 +491,16 @@
     }
 
     function wpcac_init_select2() {
-        $('.wpcac-select2').selectWoo({
+        $('.wpcac-select2').select2({
+            // Add a custom class to the dropdown so CSS can target it regardless
+            // of where select2 appends it in the DOM (usually directly on body)
+            dropdownCssClass: 'wpcac-select2-dropdown',
             ajax: {
                 url: ajaxurl, dataType: 'json', delay: 250, data: function (params) {
                     return {
                         term: params.term,
                         action: 'wpcac_search_terms',
+                        nonce: wpcac_vars.nonce,
                         taxonomy: $(this).closest('.wpcac-select2-wrapper').data('taxonomy'),
                     };
                 }, processResults: function (data) {
@@ -519,12 +519,16 @@
             }, minimumInputLength: 1,
         });
 
-        $('.wpcac-select2-tags').selectWoo({
+        $('.wpcac-select2-tags').select2({
+            // Add a custom class to the dropdown so CSS can target it regardless
+            // of where select2 appends it in the DOM (usually directly on body)
+            dropdownCssClass: 'wpcac-select2-dropdown',
             tags: true, ajax: {
                 url: ajaxurl, dataType: 'json', delay: 250, data: function (params) {
                     return {
                         term: params.term,
                         action: 'wpcac_search_tags',
+                        nonce: wpcac_vars.nonce,
                         taxonomy: $(this).closest('.wpcac-select2-wrapper').data('taxonomy'),
                     };
                 }, processResults: function (data) {
@@ -558,7 +562,11 @@
     }
 
     function wpcac_meta_fields() {
-        $('.wpcac_meta_fields:not(.select2-hidden-accessible)').selectWoo();
+        // Add a custom class to the dropdown so CSS can target it regardless
+        // of where select2 appends it in the DOM (usually directly on body)
+        $('.wpcac_meta_fields:not(.select2-hidden-accessible)').select2({
+            dropdownCssClass: 'wpcac-select2-dropdown',
+        });
     }
 
     // Custom modal helpers
