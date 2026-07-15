@@ -697,12 +697,12 @@ class Wpcac_Backend {
     }
 
     function ajax_add_column() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
         $key        = 'wpcac_' . self::generate_key();
-        $screen_key = sanitize_key( $_POST['screen_key'] ?? '' );
+        $screen_key = sanitize_key( wp_unslash( $_POST['screen_key'] ?? '' ) );
 
         self::get_column( $key, [], [], $screen_key );
 
@@ -710,13 +710,13 @@ class Wpcac_Backend {
     }
 
     function ajax_save_columns() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
-        $screen_key = sanitize_key( $_POST['screen_key'] ?? '' );
+        $screen_key = sanitize_key( wp_unslash( $_POST['screen_key'] ?? '' ) );
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized per-field after wp_parse_str()
-        $raw_form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ) : '';
+        $raw_form_data = isset( $_POST['form_data'] ) ? wp_unslash( $_POST['form_data'] ?? '' ) : '';
 
         if ( ! empty( $screen_key ) && ! empty( $raw_form_data ) ) {
             $columns = [];
@@ -732,11 +732,11 @@ class Wpcac_Backend {
     }
 
     function ajax_reset_columns() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
-        $screen_key = sanitize_key( $_POST['screen_key'] ?? '' );
+        $screen_key = sanitize_key( wp_unslash( $_POST['screen_key'] ?? '' ) );
 
         if ( ! empty( $screen_key ) ) {
             $columns_name = self::get_columns_name( $screen_key );
@@ -747,13 +747,13 @@ class Wpcac_Backend {
     }
 
     function ajax_edit_get() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
-        $post_id = absint( sanitize_key( $_POST['id'] ?? 0 ) );
-        $user_id = absint( sanitize_key( $_POST['uid'] ?? 0 ) );
-        $term_id = absint( sanitize_key( $_POST['tid'] ?? 0 ) );
+        $post_id = absint( sanitize_key( wp_unslash( $_POST['id'] ?? 0 ) ) );
+        $user_id = absint( sanitize_key( wp_unslash( $_POST['uid'] ?? 0 ) ) );
+        $term_id = absint( sanitize_key( wp_unslash( $_POST['tid'] ?? 0 ) ) );
         $field   = sanitize_text_field( wp_unslash( $_POST['field'] ?? '' ) );
         $type    = sanitize_text_field( wp_unslash( $_POST['type'] ?? '' ) );
         $name    = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
@@ -1260,13 +1260,13 @@ class Wpcac_Backend {
     }
 
     function ajax_edit_save() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
-        $post_id  = absint( sanitize_key( $_POST['id'] ?? 0 ) );
-        $user_id  = absint( sanitize_key( $_POST['uid'] ?? 0 ) );
-        $term_id  = absint( sanitize_key( $_POST['tid'] ?? 0 ) );
+        $post_id  = absint( sanitize_key( wp_unslash( $_POST['id'] ?? 0 ) ) );
+        $user_id  = absint( sanitize_key( wp_unslash( $_POST['uid'] ?? 0 ) ) );
+        $term_id  = absint( sanitize_key( wp_unslash( $_POST['tid'] ?? 0 ) ) );
         $field    = sanitize_text_field( wp_unslash( $_POST['field'] ?? '' ) );
         $type     = sanitize_text_field( wp_unslash( $_POST['type'] ?? '' ) );
         $response = [
@@ -1281,7 +1281,7 @@ class Wpcac_Backend {
 
             // term field
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
-            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ?? '' ) : null;
             if ( ! empty( $raw_value ) ) {
                 if ( is_array( $raw_value ) ) {
                     $value = self::sanitize_array( $raw_value );
@@ -1363,7 +1363,7 @@ class Wpcac_Backend {
 
             // user field
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
-            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+            $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ?? '' ) : null;
             if ( ! empty( $raw_value ) ) {
                 if ( is_array( $raw_value ) ) {
                     $value = self::sanitize_array( $raw_value );
@@ -1447,7 +1447,7 @@ class Wpcac_Backend {
             if ( $type === 'taxonomy' ) {
                 // taxonomy
                 // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
-                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ?? '' ) : null;
                 if ( ! empty( $raw_value ) ) {
                     if ( is_array( $raw_value ) ) {
                         $value = self::sanitize_array( $raw_value );
@@ -1484,7 +1484,7 @@ class Wpcac_Backend {
             } else {
                 // custom field
                 // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- unslashed, type-checked, sanitized based on type
-                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ) : null;
+                $raw_value = isset( $_POST['value'] ) ? wp_unslash( $_POST['value'] ?? '' ) : null;
                 if ( ! empty( $raw_value ) ) {
                     if ( is_array( $raw_value ) ) {
                         $value = self::sanitize_array( $raw_value );
@@ -1613,11 +1613,11 @@ class Wpcac_Backend {
     }
 
     function ajax_product_variations() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
-        $product_id = absint( sanitize_key( $_POST['id'] ?? 0 ) );
+        $product_id = absint( sanitize_key( wp_unslash( $_POST['id'] ?? 0 ) ) );
 
         if ( ( $product = wc_get_product( $product_id ) ) && $product->is_type( 'variable' ) ) {
             $variation_ids = $product->get_children();
@@ -1650,7 +1650,7 @@ class Wpcac_Backend {
     }
 
     function ajax_intro_done() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'wpcac-security' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
             die( 'Permissions check failed!' );
         }
 
@@ -1983,7 +1983,7 @@ class Wpcac_Backend {
                     if ( $can_edit_post && 'trash' !== $post->post_status ) {
                         $actions['edit'] = sprintf(
                                 '<a href="%s">%s</a>',
-                                get_edit_post_link( $postid ),
+                                esc_url( get_edit_post_link( $postid ) ),
                                 esc_html__( 'Edit', 'wpc-admin-columns' )
                         );
                     }
@@ -2615,7 +2615,7 @@ class Wpcac_Backend {
 
     function admin_menu_content() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only tab navigation, no data modification
-        $active_tab = sanitize_key( $_GET['tab'] ?? 'settings' );
+        $active_tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'settings' ) );
         ?>
         <div class="wpclever_settings_page wrap">
             <div class="wpclever_settings_page_header">
@@ -2641,7 +2641,7 @@ class Wpcac_Backend {
                 </div>
             </div>
             <h2></h2>
-            <?php if ( isset( $_GET['settings-updated'] ) && absint( $_GET['settings-updated'] ) ) { ?>
+            <?php if ( isset( $_GET['settings-updated'] ) && absint( wp_unslash( $_GET['settings-updated'] ?? '' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
                 <div class="notice notice-success is-dismissible">
                     <p><?php esc_html_e( 'Settings updated.', 'wpc-admin-columns' ); ?></p>
                 </div>
@@ -2830,11 +2830,11 @@ class Wpcac_Backend {
     }
 
     public function action_duplicate() {
-        if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || ( isset( $_REQUEST['action'] ) && 'wpcac_duplicate' === $_REQUEST['action'] ) ) ) {
+        if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || ( isset( $_REQUEST['action'] ) && 'wpcac_duplicate' === sanitize_text_field( wp_unslash( $_REQUEST['action'] ?? '' ) ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
             wp_die( esc_html__( 'No post to duplicate!', 'wpc-admin-columns' ) );
         }
 
-        $postid = ( isset( $_GET['post'] ) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
+        $postid = ( isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ?? '' ) ) : absint( wp_unslash( $_POST['post'] ?? '' ) ) );
 
         check_admin_referer( 'wpcac-duplicate-' . $postid );
 
