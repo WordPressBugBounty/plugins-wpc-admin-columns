@@ -761,6 +761,11 @@ class Wpcac_Backend {
 
         if ( ! empty( $field ) ) {
             if ( ! empty( $term_id ) ) {
+                // Verify the requesting user can edit this term before exposing its metadata.
+                if ( ! current_user_can( 'edit_term', $term_id ) ) {
+                    die( 'Permissions check failed!' );
+                }
+
                 // custom field
                 $field_value = get_term_meta( $term_id, $field, true ) ?: '';
 
@@ -908,6 +913,11 @@ class Wpcac_Backend {
 
                 echo '<div class="wpcac-edit-btns"><button class="button button-primary wpcac-edit-save" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-field="' . esc_attr( $field ) . '" data-type="' . esc_attr( $type ) . '">' . esc_html__( 'Update', 'wpc-admin-columns' ) . '</button></div>';
             } elseif ( ! empty( $user_id ) ) {
+                // Verify the requesting user can edit users before exposing any user metadata.
+                if ( ! current_user_can( 'edit_users' ) ) {
+                    die( 'Permissions check failed!' );
+                }
+
                 // custom field
                 $field_value = get_user_meta( $user_id, $field, true );
 
@@ -1055,6 +1065,11 @@ class Wpcac_Backend {
 
                 echo '<div class="wpcac-edit-btns"><button class="button button-primary wpcac-edit-save" data-id="0" data-uid="' . esc_attr( $user_id ) . '" data-field="' . esc_attr( $field ) . '" data-type="' . esc_attr( $type ) . '">' . esc_html__( 'Update', 'wpc-admin-columns' ) . '</button></div>';
             } elseif ( ! empty( $post_id ) ) {
+                // Verify the requesting user can edit this post before exposing its metadata.
+                if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                    die( 'Permissions check failed!' );
+                }
+
                 if ( $type === 'taxonomy' ) {
                     // taxonomy
                     // translators: %1$s is the field or taxonomy name, %2$s is the post/user/term identifier
