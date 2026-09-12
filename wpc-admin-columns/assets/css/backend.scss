@@ -112,6 +112,10 @@
       max-width: 100%;
     }
 
+    select[multiple] {
+      min-height: 120px;
+    }
+
     textarea {
       height: 100px;
     }

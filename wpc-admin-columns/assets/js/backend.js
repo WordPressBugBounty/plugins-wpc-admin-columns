@@ -491,6 +491,10 @@
     }
 
     function wpcac_init_select2() {
+        if (wpcac_vars.select2 !== 'yes' || !$.fn.select2) {
+            return;
+        }
+
         $('.wpcac-select2').select2({
             // Add a custom class to the dropdown so CSS can target it regardless
             // of where select2 appends it in the DOM (usually directly on body)
@@ -562,6 +566,10 @@
     }
 
     function wpcac_meta_fields() {
+        if (wpcac_vars.select2 !== 'yes' || !$.fn.select2) {
+            return;
+        }
+
         // Add a custom class to the dropdown so CSS can target it regardless
         // of where select2 appends it in the DOM (usually directly on body)
         $('.wpcac_meta_fields:not(.select2-hidden-accessible)').select2({

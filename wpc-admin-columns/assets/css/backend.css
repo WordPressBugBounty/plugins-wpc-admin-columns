@@ -99,6 +99,9 @@
   width: 100%;
   max-width: 100%;
 }
+.wpcac-popup.wpcac-popup-edit select[multiple] {
+  min-height: 120px;
+}
 .wpcac-popup.wpcac-popup-edit textarea {
   height: 100px;
 }
@@ -858,3 +861,5 @@ body.wpcac-horizontal-scroll .wpcac-horizontal-scroll-table table.wp-list-table.
 input[type=search] {
   -webkit-appearance: textfield !important;
 }
+
+/*# sourceMappingURL=backend.css.map */

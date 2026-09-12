@@ -136,11 +136,13 @@ class Wpcac_Backend {
         wp_enqueue_style( 'intro', WPCAC_URI . 'assets/libs/intro/introjs.css', [], WPCAC_VERSION );
         wp_enqueue_script( 'intro', WPCAC_URI . 'assets/libs/intro/intro.js', [ 'jquery' ], WPCAC_VERSION, true );
 
-        // select2 – always loaded from local bundle, no WooCommerce dependency
-        wp_register_style( 'select2', WPCAC_URI . 'assets/libs/select2/select2.min.css', [], WPCAC_VERSION );
-        wp_enqueue_style( 'select2' );
-        wp_register_script( 'select2', WPCAC_URI . 'assets/libs/select2/select2.full.min.js', [ 'jquery' ], WPCAC_VERSION, true );
-        wp_enqueue_script( 'select2' );
+        if ( self::get_setting( 'select2', 'yes' ) === 'yes' ) {
+            // select2 – loaded from local bundle, no WooCommerce dependency
+            wp_register_style( 'select2', WPCAC_URI . 'assets/libs/select2/select2.min.css', [], WPCAC_VERSION );
+            wp_enqueue_style( 'select2' );
+            wp_register_script( 'select2', WPCAC_URI . 'assets/libs/select2/select2.full.min.js', [ 'jquery' ], WPCAC_VERSION, true );
+            wp_enqueue_script( 'select2' );
+        }
 
         if ( self::get_setting( 'json_editor', 'no' ) === 'yes' ) {
             // Use WordPress core's CodeMirror (wp-codemirror) for JSON editing
@@ -161,7 +163,7 @@ class Wpcac_Backend {
                         'nonce'             => wp_create_nonce( 'wpcac-security' ),
                         'remove_confirm'    => esc_html__( 'Are you sure?', 'wpc-admin-columns' ),
                         'reset_confirm'     => esc_html__( 'All column organization on this page will be removed. Are you sure?', 'wpc-admin-columns' ),
-                        'copy'             => esc_html__( 'Copy', 'wpc-admin-columns' ),
+                        'copy'              => esc_html__( 'Copy', 'wpc-admin-columns' ),
                         'copied'            => esc_html__( 'Copied', 'wpc-admin-columns' ),
                         'enabled'           => esc_html__( 'Enabled', 'wpc-admin-columns' ),
                         'disabled'          => esc_html__( 'Disabled', 'wpc-admin-columns' ),
@@ -171,6 +173,7 @@ class Wpcac_Backend {
                         'intro_done'        => esc_html__( 'Got it!', 'wpc-admin-columns' ),
                         'intro_text'        => esc_html__( 'Click here to take control of columns. Add, remove, or rearrange them as you wish.', 'wpc-admin-columns' ),
                         'intro'             => get_user_meta( get_current_user_id(), 'wpcac_intro_' . WPCAC_VERSION, true ),
+                        'select2'           => self::get_setting( 'select2', 'yes' ),
                 ]
         );
     }
@@ -1084,17 +1087,35 @@ class Wpcac_Backend {
                             }
                         }
 
-                        echo '<div class="wpcac-select2-wrapper" data-taxonomy="' . esc_attr( $field ) . '">';
-                        echo '<select class="wpcac-edit-value wpcac-select2" multiple="multiple">';
+                        if ( self::get_setting( 'select2', 'yes' ) === 'yes' ) {
+                            echo '<div class="wpcac-select2-wrapper" data-taxonomy="' . esc_attr( $field ) . '">';
+                            echo '<select class="wpcac-edit-value wpcac-select2" multiple="multiple">';
 
-                        if ( ! empty( $selected ) ) {
-                            foreach ( $selected as $term ) {
-                                echo '<option value="' . esc_attr( $term['id'] ) . '" selected>' . esc_html( $term['name'] ) . '</option>';
+                            if ( ! empty( $selected ) ) {
+                                foreach ( $selected as $term ) {
+                                    echo '<option value="' . esc_attr( $term['id'] ) . '" selected>' . esc_html( $term['name'] ) . '</option>';
+                                }
                             }
-                        }
 
-                        echo '</select>';
-                        echo '</div>';
+                            echo '</select>';
+                            echo '</div>';
+                        } else {
+                            $selected_ids = ! empty( $selected ) ? wp_list_pluck( $selected, 'id' ) : [];
+                            $all_terms    = get_terms( [
+                                    'taxonomy'   => $field,
+                                    'hide_empty' => false,
+                            ] );
+
+                            echo '<select class="wpcac-edit-value" multiple="multiple">';
+
+                            if ( ! empty( $all_terms ) && ! is_wp_error( $all_terms ) ) {
+                                foreach ( $all_terms as $term ) {
+                                    echo '<option value="' . esc_attr( $term->term_id ) . '" ' . ( in_array( $term->term_id, $selected_ids, true ) ? 'selected' : '' ) . '>' . esc_html( $term->name ) . '</option>';
+                                }
+                            }
+
+                            echo '</select>';
+                        }
                     } else {
                         $selected = [];
 
@@ -1104,17 +1125,22 @@ class Wpcac_Backend {
                             }
                         }
 
-                        echo '<div class="wpcac-select2-wrapper" data-taxonomy="' . esc_attr( $field ) . '">';
-                        echo '<select class="wpcac-edit-value wpcac-select2-tags" multiple="multiple">';
+                        if ( self::get_setting( 'select2', 'yes' ) === 'yes' ) {
+                            echo '<div class="wpcac-select2-wrapper" data-taxonomy="' . esc_attr( $field ) . '">';
+                            echo '<select class="wpcac-edit-value wpcac-select2-tags" multiple="multiple">';
 
-                        if ( ! empty( $selected ) ) {
-                            foreach ( $selected as $tag ) {
-                                echo '<option value="' . esc_attr( $tag ) . '" selected>' . esc_html( $tag ) . '</option>';
+                            if ( ! empty( $selected ) ) {
+                                foreach ( $selected as $tag ) {
+                                    echo '<option value="' . esc_attr( $tag ) . '" selected>' . esc_html( $tag ) . '</option>';
+                                }
                             }
-                        }
 
-                        echo '</select>';
-                        echo '</div>';
+                            echo '</select>';
+                            echo '</div>';
+                        } else {
+                            echo '<input type="text" class="wpcac-edit-value" value="' . esc_attr( implode( ', ', $selected ) ) . '"/>';
+                            echo '<p class="description">' . esc_html__( 'Separate terms with commas.', 'wpc-admin-columns' ) . '</p>';
+                        }
                     }
                 } else {
                     // custom field
@@ -2174,7 +2200,7 @@ class Wpcac_Backend {
                 $column_content .= '</span>';
             }
 
-            echo '<div class="' . esc_attr( $editable ? 'wpcac-value-wrapper wpcac-value-wrapper-editable' : 'wpcac-value-wrapper' ) . '">' . wp_kses_post( apply_filters( 'wpcac_custom_column_' . $column_type, $column_content, $column, $postid ) ) . '</div>';
+            echo '<div class="' . esc_attr( $editable ? 'wpcac-value-wrapper wpcac-value-wrapper-editable' : 'wpcac-value-wrapper' ) . '">' . wp_kses_post( apply_filters( 'wpcac_custom_column_' . $column_type, $column_content, $saved_columns[ $column ], $postid ) ) . '</div>';
         }
 
         return null;
@@ -2680,6 +2706,7 @@ class Wpcac_Backend {
                 <?php if ( $active_tab === 'settings' ) {
                     $personalized = self::get_setting( 'personalized', 'yes' );
                     $json_editor  = self::get_setting( 'json_editor', 'no' );
+                    $select2      = self::get_setting( 'select2', 'yes' );
                     ?>
                     <form method="post" action="options.php">
                         <table class="form-table">
@@ -2706,6 +2733,16 @@ class Wpcac_Backend {
                                         <option value="no" <?php selected( $json_editor, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-admin-columns' ); ?></option>
                                     </select>
                                     <span class="description"><?php esc_html_e( 'Enable JSON Editor to edit custom fields in JSON format using the built-in WordPress code editor.', 'wpc-admin-columns' ); ?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><?php esc_html_e( 'Enable Select2', 'wpc-admin-columns' ); ?></th>
+                                <td>
+                                    <select name="wpcac_settings[select2]">
+                                        <option value="yes" <?php selected( $select2, 'yes' ); ?>><?php esc_html_e( 'Yes', 'wpc-admin-columns' ); ?></option>
+                                        <option value="no" <?php selected( $select2, 'no' ); ?>><?php esc_html_e( 'No', 'wpc-admin-columns' ); ?></option>
+                                    </select>
+                                    <span class="description"><?php esc_html_e( 'Enable Select2 to enhance selection boxes. Disable it to avoid conflicts with other plugins.', 'wpc-admin-columns' ); ?></span>
                                 </td>
                             </tr>
                             <tr class="submit">
