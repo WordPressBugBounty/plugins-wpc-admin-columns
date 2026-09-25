@@ -7,7 +7,7 @@ Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: wpc-admin-columns
 Domain Path: /languages/
-Version: 2.3.5
+Version: 2.3.6
 Requires at least: 5.9
 Playground: true
 License: GPLv2 or later
@@ -16,7 +16,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.3.5' );
+! defined( 'WPCAC_VERSION' ) && define( 'WPCAC_VERSION', '2.3.6' );
 ! defined( 'WPCAC_LITE' ) && define( 'WPCAC_LITE', __FILE__ );
 ! defined( 'WPCAC_FILE' ) && define( 'WPCAC_FILE', __FILE__ );
 ! defined( 'WPCAC_URI' ) && define( 'WPCAC_URI', plugin_dir_url( __FILE__ ) );
