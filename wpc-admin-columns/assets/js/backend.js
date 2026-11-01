@@ -79,6 +79,7 @@
         var title = $(this).attr('aria-label');
 
         $('#wpcac-popup-edit').html('').addClass('wpcac-popup-loading');
+        $('#wpcac-popup-edit').data('name', name).data('key', key);
 
         wpcac_modal_open($('#wpcac-popup-edit'), title, function () {
             $json_cm_editor = null;
@@ -129,6 +130,8 @@
             field: field,
             type: type,
             value: value,
+            name: $('#wpcac-popup-edit').data('name'),
+            key: $('#wpcac-popup-edit').data('key'),
             nonce: wpcac_vars.nonce,
         };
 

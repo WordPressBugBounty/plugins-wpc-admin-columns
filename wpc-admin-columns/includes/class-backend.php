@@ -1601,6 +1601,30 @@ class Wpcac_Backend {
             }
         }
 
+        if ( ! empty( $response['status'] ) && in_array( $type, [ 'select', 'multiple_select' ], true ) && isset( $value ) ) {
+            // Show labels of the choices (if any) instead of the raw values
+            $choice_labels = self::get_choice_labels_by_key(
+                    sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) ),
+                    sanitize_text_field( wp_unslash( $_POST['key'] ?? '' ) )
+            );
+
+            if ( ! empty( $choice_labels ) ) {
+                if ( is_array( $value ) ) {
+                    $response_value = '<ul>';
+
+                    foreach ( $value as $v ) {
+                        $response_value .= '<li>' . esc_html( $choice_labels[ (string) $v ] ?? $v ) . '</li>';
+                    }
+
+                    $response_value .= '</ul>';
+
+                    $response['value'] = $response_value;
+                } else {
+                    $response['value'] = esc_html( $choice_labels[ (string) $value ] ?? $value );
+                }
+            }
+        }
+
         wp_send_json( $response );
     }
 
@@ -2157,7 +2181,7 @@ class Wpcac_Backend {
 
                                 if ( ! empty( $value ) && is_array( $value ) ) {
                                     foreach ( $value as $val ) {
-                                        $column_content .= '<li>' . esc_html( $val ) . '</li>';
+                                        $column_content .= '<li>' . esc_html( self::get_choice_label( $val, $saved_columns, $column ) ) . '</li>';
                                     }
                                 }
 
@@ -2179,7 +2203,7 @@ class Wpcac_Backend {
                                 break;
                             default:
                                 if ( is_string( $value ) ) {
-                                    $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $postid ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $field ) . '">' . esc_html( apply_filters( 'wpcac_custom_column_value', $value, $field, $saved_columns[ $column ]['data_type'], $postid ) ) . '</div>';
+                                    $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $postid ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $field ) . '">' . esc_html( self::get_choice_label( apply_filters( 'wpcac_custom_column_value', $value, $field, $saved_columns[ $column ]['data_type'], $postid ), $saved_columns, $column ) ) . '</div>';
                                 } else {
                                     $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $postid ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $field ) . '">[...]</div>';
                                 }
@@ -2408,7 +2432,7 @@ class Wpcac_Backend {
 
                                 if ( ! empty( $value ) && is_array( $value ) ) {
                                     foreach ( $value as $val ) {
-                                        $column_content .= '<li>' . esc_html( $val ) . '</li>';
+                                        $column_content .= '<li>' . esc_html( self::get_choice_label( $val, $saved_columns, $column ) ) . '</li>';
                                     }
                                 }
 
@@ -2430,7 +2454,7 @@ class Wpcac_Backend {
                                 break;
                             default:
                                 if ( is_string( $value ) ) {
-                                    $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $media_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">' . esc_html( $value ) . '</div>';
+                                    $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $media_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">' . esc_html( self::get_choice_label( $value, $saved_columns, $column ) ) . '</div>';
                                 } else {
                                     $column_content = '<div class="wpcac-value" data-id="' . esc_attr( $media_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">[...]</div>';
                                 }
@@ -2520,7 +2544,7 @@ class Wpcac_Backend {
 
                                 if ( ! empty( $value ) && is_array( $value ) ) {
                                     foreach ( $value as $val ) {
-                                        $column_content .= '<li>' . esc_html( $val ) . '</li>';
+                                        $column_content .= '<li>' . esc_html( self::get_choice_label( $val, $saved_columns, $column ) ) . '</li>';
                                     }
                                 }
 
@@ -2542,7 +2566,7 @@ class Wpcac_Backend {
                                 break;
                             default:
                                 if ( is_string( $value ) ) {
-                                    $column_content = '<div class="wpcac-value" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">' . esc_html( $value ) . '</div>';
+                                    $column_content = '<div class="wpcac-value" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">' . esc_html( self::get_choice_label( $value, $saved_columns, $column ) ) . '</div>';
                                 } else {
                                     $column_content = '<div class="wpcac-value" data-id="0" data-tid="' . esc_attr( $term_id ) . '" data-type="' . esc_attr( $saved_columns[ $column ]['data_type'] ) . '" data-field="' . esc_attr( $saved_columns[ $column ]['field'] ) . '">[...]</div>';
                                 }
@@ -2944,6 +2968,73 @@ class Wpcac_Backend {
         json_decode( $string );
 
         return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * Parse the "value : label" choices string into a value => label map.
+     */
+    public static function parse_choices( $choices_str ) {
+        $map = [];
+
+        if ( ! is_string( $choices_str ) || $choices_str === '' ) {
+            return $map;
+        }
+
+        foreach ( explode( "\n", $choices_str ) as $choice ) {
+            $choice = trim( $choice );
+
+            if ( $choice === '' ) {
+                continue;
+            }
+
+            if ( str_contains( $choice, ' : ' ) ) {
+                $choice_arr = explode( ' : ', $choice, 2 );
+                $choice_val = trim( $choice_arr[0] );
+                $choice_lbl = trim( $choice_arr[1] ?? '' );
+
+                $map[ $choice_val ] = $choice_lbl !== '' ? $choice_lbl : $choice_val;
+            } else {
+                $map[ $choice ] = $choice;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * Get the label of a Select / Multiple select value for a saved column, fall back to the value if there is no label.
+     */
+    public static function get_choice_label( $value, $saved_columns, $column ) {
+        if ( ! is_scalar( $value ) ) {
+            return $value;
+        }
+
+        $data_type = $saved_columns[ $column ]['data_type'] ?? '';
+
+        if ( ! in_array( $data_type, [ 'select', 'multiple_select' ], true ) ) {
+            return $value;
+        }
+
+        $map = self::parse_choices( $saved_columns[ $column ]['choices'] ?? '' );
+
+        return $map[ (string) $value ] ?? $value;
+    }
+
+    /**
+     * Get the choices map (value => label) of a saved column by the columns option name and the column key.
+     */
+    public static function get_choice_labels_by_key( $name, $key ) {
+        if ( empty( $name ) || empty( $key ) || ! str_starts_with( $name, 'wpcac_columns_' ) ) {
+            return [];
+        }
+
+        $saved_columns = get_option( $name, [] );
+
+        if ( ! is_array( $saved_columns ) ) {
+            return [];
+        }
+
+        return self::parse_choices( $saved_columns[ $key ]['choices'] ?? '' );
     }
 
     public static function string_to_bool( $string ) {
