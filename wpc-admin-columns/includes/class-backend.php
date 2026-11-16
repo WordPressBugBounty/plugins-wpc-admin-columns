@@ -179,9 +179,25 @@ class Wpcac_Backend {
     }
 
     function get_screen_key() {
-        $taxonomy   = get_current_screen()->taxonomy ?: '';
-        $post_type  = get_current_screen()->post_type ?: '';
-        $screen_id  = get_current_screen()->id ?: '';
+        $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+        // WP core AJAX handlers (e.g. inline-save for Quick Edit, inline-save-tax) do not set the
+        // current screen, but pass it via $_POST['screen']. Resolve it so custom columns are kept.
+        if ( empty( $screen ) && wp_doing_ajax() && ! empty( $_POST['screen'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only used to read the screen id
+            $screen_param = sanitize_text_field( wp_unslash( $_POST['screen'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+            if ( function_exists( 'convert_to_screen' ) ) {
+                $screen = convert_to_screen( $screen_param );
+            }
+        }
+
+        if ( empty( $screen ) ) {
+            return apply_filters( 'wpcac_get_screen_key', '' );
+        }
+
+        $taxonomy   = $screen->taxonomy ?: '';
+        $post_type  = $screen->post_type ?: '';
+        $screen_id  = $screen->id ?: '';
         $screen_key = ! empty( $taxonomy ) ? $taxonomy : ( ! empty( $post_type ) ? $post_type : $screen_id );
 
         return apply_filters( 'wpcac_get_screen_key', $screen_key );
