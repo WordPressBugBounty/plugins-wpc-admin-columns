@@ -720,6 +720,10 @@ class Wpcac_Backend {
             die( 'Permissions check failed!' );
         }
 
+        if ( ! self::can_manage_columns() ) {
+            die( 'Permissions check failed!' );
+        }
+
         $key        = 'wpcac_' . self::generate_key();
         $screen_key = sanitize_key( wp_unslash( $_POST['screen_key'] ?? '' ) );
 
@@ -730,6 +734,10 @@ class Wpcac_Backend {
 
     function ajax_save_columns() {
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
+            die( 'Permissions check failed!' );
+        }
+
+        if ( ! self::can_manage_columns() ) {
             die( 'Permissions check failed!' );
         }
 
@@ -752,6 +760,10 @@ class Wpcac_Backend {
 
     function ajax_reset_columns() {
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpcac-security' ) ) {
+            die( 'Permissions check failed!' );
+        }
+
+        if ( ! self::can_manage_columns() ) {
             die( 'Permissions check failed!' );
         }
 
@@ -1767,6 +1779,11 @@ class Wpcac_Backend {
 
         if ( is_array( $saved_columns ) && ! empty( $saved_columns ) ) {
             foreach ( $saved_columns as $key => $column ) {
+                // Ignore columns with invalid keys (keys are printed into HTML attributes by core)
+                if ( ! self::is_valid_column_key( $key ) || ! is_array( $column ) ) {
+                    continue;
+                }
+
                 if ( isset( $column['enable'] ) && ( $column['enable'] === 'no' ) ) {
                     unset( $columns[ $key ] );
                 } else {
@@ -3058,15 +3075,50 @@ class Wpcac_Backend {
     }
 
     public static function sanitize_array( $arr ) {
+        $clean = [];
+
         foreach ( (array) $arr as $k => $v ) {
+            // Sanitize array keys too, keys can end up in HTML attributes (e.g. column ids/classes)
+            if ( is_string( $k ) ) {
+                $k = self::sanitize_column_key( $k );
+
+                if ( $k === '' ) {
+                    continue;
+                }
+            }
+
             if ( is_array( $v ) ) {
-                $arr[ $k ] = self::sanitize_array( $v );
+                $clean[ $k ] = self::sanitize_array( $v );
             } else {
-                $arr[ $k ] = sanitize_post_field( 'post_content', $v, 0, 'db' );
+                $clean[ $k ] = sanitize_post_field( 'post_content', $v, 0, 'db' );
             }
         }
 
-        return $arr;
+        return $clean;
+    }
+
+    public static function sanitize_column_key( $key ) {
+        return preg_replace( '/[^A-Za-z0-9_\-.:]/', '', (string) $key );
+    }
+
+    public static function is_valid_column_key( $key ) {
+        return is_int( $key ) || ( is_string( $key ) && $key !== '' && self::sanitize_column_key( $key ) === $key );
+    }
+
+    /**
+     * Check whether the current user can manage the columns of the screen.
+     * The shared (non-personalized) columns affect all users, so they require manage_options.
+     */
+    public static function can_manage_columns() {
+        if ( ! is_user_logged_in() ) {
+            return false;
+        }
+
+        if ( self::get_setting( 'personalized', 'yes' ) !== 'yes' ) {
+            return current_user_can( 'manage_options' );
+        }
+
+        return current_user_can( apply_filters( 'wpcac_manage_columns_capability', 'read' ) );
     }
 
     public static function generate_key() {

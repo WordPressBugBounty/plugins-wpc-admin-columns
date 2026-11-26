@@ -3,7 +3,7 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: wp, wpc, admin, columns, backend
 Tested up to: 7.1
-Stable tag: 2.3.8
+Stable tag: 2.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Playground: true
@@ -83,6 +83,10 @@ Please try other plugins from us:
 3. All done!
 
 == Changelog ==
+
+= 2.3.9 =
+* Fixed: Show the label instead of the value on the Select column in the table
+* Fixed: Security vulnerability, sanitize column keys and check user capability when saving columns
 
 = 2.3.8 =
 * Fixed: Columns reset to default on the updated row after using WordPress Quick Edit
